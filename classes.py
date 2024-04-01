@@ -26,3 +26,22 @@ class Button:
         # draw button on the screen
         surface.blit(self.image, (self.rect.x, self.rect.y))
         return action
+
+class Background:
+    def __init__(self, x, y, width, height, end):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.end = end
+        self.path = [self.x, self.y]
+        self.vel = 7
+
+    def draw(self, screen):
+        self.move()
+        if self.vel > 0:
+            pass
+
+
+    def move(self):
+        pass
