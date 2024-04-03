@@ -24,16 +24,7 @@ surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
 menu_state = "main"
 once_started = False
 
-x = screenW // 2 - sb[0].get_width()/2
-y = screenH - sb[0].get_height()
-balloonW = 128
-balloonH = 185
-vel = 7
-up = False
-down = False
-left = False
-right = False
-moveCount = 0
+bg_y = -8688
 fps = 20
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
 
@@ -56,38 +47,50 @@ def draw_text(text, font, text_col, x, y):  #functie care scrie un text pe scree
     img = font.render(text, True, text_col)  #variabila imagine care contine un font randat cu text
     screen.blit(img, (x, y))
 
+class Balloon:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.vel = 7
+        self.up = False
+        self.down = False
+        self.left = False
+        self.right = False
+        self.moveCount = 0
+        self.sprite_index = False
+
+    def draw(self, screen):
+        # Toggle sprite index
+        self.sprite_index = not self.sprite_index
+
+        # Get the current sprite based on sprite_index
+        current_sprite = sb[self.sprite_index]
+
+        # Blit the sprite to the screen
+        screen.blit(current_sprite, (self.x, self.y))
+
 
 def drawGameWindow():
-    global moveCount
-    global menu_state
-    # timpul trecut de cand a fost initiat pygame, in milisecunde, bagat in elapsed_time
-    elapsed_time = pygame.time.get_ticks()
-    # Calculate y-coordinate of the background based on elapsed time
-    bg_speed = 4  # Adjust the scrolling speed as needed
-    bg_y = int((elapsed_time * bg_speed) % (bg.get_height() + 8688)) - 8688
+    global bg_y
+    #afiseaza background
     screen.blit(bg, (0, bg_y))
-    if bg_y >= 0:
-        menu_state = "game over"
-
-    current_sprite = sb[(pygame.time.get_ticks() // (1000 // fps)) % len(sb)]
-    draw_text("Press SPACE to pause", font, TEXT_COL, 0, 0)
-    if moveCount + 1 >= 20:
-        moveCount = 0
-    if up or down or left or right:
-        current_sprite = sb[moveCount // 3 % len(sb)]
-        screen.blit(current_sprite, (x, y))
-        moveCount += 1
-    else:
-        screen.blit(current_sprite, (x, y))
+    bg_y += 7
+    if bg_y < bg.get_height() * -1:
+        bg_y = bg.get_height()
 
     pygame.display.update()
 
-
+# MAIN LOOP
+player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
 run = True
 while run:
     clock.tick(fps)
-    #check menu state
+
+    # check menu state
     if menu_state == "main":
+
         screen.fill((52, 50, 150))
         if start_button.draw(screen):
             menu_state = "play"
@@ -98,60 +101,61 @@ while run:
             run = False
 
     if menu_state == "play":
-        if menu_state != "game over":
-            once_started = True
         drawGameWindow()
-
-        keys = pygame.key.get_pressed()  # VERIFICA UP DOWN LEFT RIGHT, UP+LEFT+RIGHT ETC
-        if keys[pygame.K_UP] and y > vel:
-            if keys[pygame.K_LEFT] and y > vel and x > vel:
-                y -= vel
-                x -= vel/2
-                up = True
-                down = False
-                left = True
-                right = False
-            elif keys[pygame.K_RIGHT] and y > vel and x < screenW - balloonW - vel:
-                y -= vel
-                x += vel/2
-                up = True
-                down = False
-                left = False
-                right = True
+        player.draw(screen)
+        if bg_y >= 0:
+            menu_state = "game over"
+        # VERIFICA UP DOWN LEFT RIGHT, UP+LEFT+RIGHT ETC
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] and player.y > player.vel:
+            if keys[pygame.K_LEFT] and player.y > player.vel and player.x > player.vel:
+                player.y -= player.vel
+                player.x -= player.vel/2
+                player.up = True
+                player.down = False
+                player.left = True
+                player.right = False
+            elif keys[pygame.K_RIGHT] and player.y > player.vel and player.x < screenW - player.width - player.vel:
+                player.y -= player.vel
+                player.x += player.vel/2
+                player.up = True
+                player.down = False
+                player.left = False
+                player.right = True
             else:
-                y -= vel
-                up = True
-                down = False
-        elif keys[pygame.K_DOWN] and y < screenH - balloonH - vel:
-            if keys[pygame.K_LEFT] and y < screenH - balloonH - vel and x > vel:
-                y += vel
-                x -= vel/2
-                up = False
-                down = True
-                left = True
-                right = False
-            elif keys[pygame.K_RIGHT] and y < screenH - balloonH - vel and x < screenW - balloonW - vel:
-                y += vel
-                x += vel/2
-                up = False
-                down = True
-                left = False
-                right = True
+                player.y -= player.vel
+                player.up = True
+                player.down = False
+        elif keys[pygame.K_DOWN] and player.y < screenH - player.height - player.vel:
+            if keys[pygame.K_LEFT] and player.y < screenH - player.height - player.vel and player.x > player.vel:
+                player.y += player.vel
+                player.x -= player.vel/2
+                player.up = False
+                player.down = True
+                player.left = True
+                player.right = False
+            elif keys[pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
+                player.y += player.vel
+                player.x += player.vel/2
+                player.up = False
+                player.down = True
+                player.left = False
+                player.right = True
             else:
-                y += vel
-                up = False
-                down = True
-        if keys[pygame.K_LEFT] and x > vel:
-            x -= vel
-            left = True
-            right = False
-        elif keys[pygame.K_RIGHT] and x < screenW - balloonW - vel:
-            x += vel
-            left = False
-            right = True
+                player.y += player.vel
+                player.up = False
+                player.down = True
+        if keys[pygame.K_LEFT] and player.x > player.vel:
+            player.x -= player.vel
+            player.left = True
+            player.right = False
+        elif keys[pygame.K_RIGHT] and player.x < screenW - player.width - player.vel:
+            player.x += player.vel
+            player.left = False
+            player.right = True
 
     if menu_state == "pause":  #arata butoanele de pause screen
-        pygame.draw.rect(surface, (128, 128, 128, 20), [0, 0, screenW, screenH])
+        pygame.draw.rect(surface, (128, 128, 128, 5), [0, 0, screenW, screenH])
         screen.blit(surface, (0, 0))
 
         if resume_button.draw(screen):
@@ -172,9 +176,17 @@ while run:
         if quit_button.draw(screen):
             run = False
         if main_button.draw(screen):
+            #daca e game over, se reseteaza tot cand se intra pe main menu
+            player.x = screenW // 2 - sb[0].get_width() / 2
+            player.y = screenH - sb[0].get_height()
+            player.up = False
+            player.down = False
+            player.left = False
+            player.right = False
+            player.moveCount = 0
+            bg_y = -8688
             menu_state = "main"
 
-        pygame.display.update()
 
     # EVENT CHECK
     for event in pygame.event.get():
