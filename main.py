@@ -1,6 +1,5 @@
 import pygame
 import classes
-import time
 pygame.init()
 
 #game images
@@ -23,7 +22,6 @@ surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
 #game variables
 menu_state = "main"
 once_started = False
-
 bg_y = -8688
 fps = 20
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
@@ -47,6 +45,7 @@ def draw_text(text, font, text_col, x, y):  #functie care scrie un text pe scree
     img = font.render(text, True, text_col)  #variabila imagine care contine un font randat cu text
     screen.blit(img, (x, y))
 
+
 class Balloon:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -58,10 +57,10 @@ class Balloon:
         self.down = False
         self.left = False
         self.right = False
-        self.moveCount = 0
         self.sprite_index = False
 
-    def draw(self, screen):
+
+    def draw(self, onscreen):
         # Toggle sprite index
         self.sprite_index = not self.sprite_index
 
@@ -69,25 +68,23 @@ class Balloon:
         current_sprite = sb[self.sprite_index]
 
         # Blit the sprite to the screen
-        screen.blit(current_sprite, (self.x, self.y))
+        onscreen.blit(current_sprite, (self.x, self.y))
+
+player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
 
 
-def drawGameWindow():
+def drawBackground():
     global bg_y
-    #afiseaza background
     screen.blit(bg, (0, bg_y))
-    bg_y += 7
+    bg_y += 10
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
-
     pygame.display.update()
 
 # MAIN LOOP
-player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
 run = True
 while run:
     clock.tick(fps)
-
     # check menu state
     if menu_state == "main":
 
@@ -101,7 +98,7 @@ while run:
             run = False
 
     if menu_state == "play":
-        drawGameWindow()
+        drawBackground()
         player.draw(screen)
         if bg_y >= 0:
             menu_state = "game over"
@@ -183,7 +180,6 @@ while run:
             player.down = False
             player.left = False
             player.right = False
-            player.moveCount = 0
             bg_y = -8688
             menu_state = "main"
 
