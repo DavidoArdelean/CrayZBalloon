@@ -1,18 +1,19 @@
 import pygame
 import classes
+import random
 pygame.init()
 
-#game images
+#variables from game images
 pygame.display.set_caption("CrayZ Balloon")
 walk = [pygame.image.load('walk0.png'), pygame.image.load('walk1.png'), pygame.image.load('walk2.png'), pygame.image.load('walk3.png'), pygame.image.load('walk4.png'), pygame.image.load('walk5.png'), pygame.image.load('walk6.png'), pygame.image.load('walk7.png')]
 bg = pygame.image.load("bg.png")
 sb = [pygame.image.load('SB0.png'), pygame.image.load('SB1.png')]
-b_start = pygame.image.load('b_start.png')
-b_highscore = pygame.image.load('b_highscore.png')
-b_quit = pygame.image.load('b_quit.png')
-b_resume = pygame.image.load('b_resume.png')
-b_back = pygame.image.load('b_back.png')
-b_main = pygame.image.load('b_main.png')
+b_start = pygame.image.load('Assets/menu/b_start.png')
+b_highscore = pygame.image.load('Assets/menu/b_highscore.png')
+b_quit = pygame.image.load('Assets/menu/b_quit.png')
+b_resume = pygame.image.load('Assets/menu/b_resume.png')
+b_back = pygame.image.load('Assets/menu/b_back.png')
+b_main = pygame.image.load('Assets/menu/b_main.png')
 
 screenW = 512
 screenH = 512
@@ -71,6 +72,30 @@ class Balloon:
         onscreen.blit(current_sprite, (self.x, self.y))
 
 player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
+
+
+class Enemy:
+    bird_left = [pygame.image.load('Assets/Birds/FBL1.png'), pygame.image.load('Assets/Birds/FBL2.png'),
+                 pygame.image.load('Assets/Birds/FBL3.png'), pygame.image.load('Assets/Birds/FBL4.png'),
+                 pygame.image.load('Assets/Birds/FBL5.png'), pygame.image.load('Assets/Birds/FBL6.png')]
+    bird_right = [pygame.image.load('Assets/Birds/FBR1.png'), pygame.image.load('Assets/Birds/FBR2.png'),
+                  pygame.image.load('Assets/Birds/FBR3.png'), pygame.image.load('Assets/Birds/FBR4.png'),
+                  pygame.image.load('Assets/Birds/FBR5.png'), pygame.image.load('Assets/Birds/FBR6.png')]
+
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.vel = 7
+        self.side = True
+        self.x = x
+        #self.end = end
+        self.path = [self.x, self.end]
+        self.moveCount = 0
+        self.collided = False
+        self.visible = True
+        
 
 
 def drawBackground():
