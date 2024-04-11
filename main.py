@@ -24,7 +24,7 @@ surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
 menu_state = "main"
 once_started = False
 bg_y = -8688
-fps = 20
+fps = 30
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
 
 
@@ -54,7 +54,7 @@ class Balloon:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 7
+        self.vel = 4
         self.up = False
         self.down = False
         self.left = False
@@ -74,7 +74,6 @@ class Balloon:
 
 player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
 
-
 class Enemy:
     bird_left = [pygame.image.load('Assets/Birds/FBL1.png'), pygame.image.load('Assets/Birds/FBL2.png'),
                  pygame.image.load('Assets/Birds/FBL3.png'), pygame.image.load('Assets/Birds/FBL4.png'),
@@ -89,8 +88,7 @@ class Enemy:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 9
-        self.x = x
+        self.vel = 3.2
         self.end = end
         self.path = [self.x, self.end]
         self.moveCount = 0
@@ -111,28 +109,25 @@ class Enemy:
         if self.side:  # daca enemy e in dreapta, sa mearga in stanga
             if self.end - self.vel < self.path[0]:
                     self.x -= self.vel
-            else:
-                self.x = -64
-                self.y = random.choice((100, 200, 300, 400))
-                self.x += self.vel
 
         else:           # daca enemy e in stanga, sa mearga in dreapta
             if self.x <= self.path[1]:
                     self.x += self.vel
-            else:
-                self.x = -64
-                self.y = random.choice((100, 200, 300, 400))
-                self.x += self.vel
 
-
-bird_L1 = Enemy(False, -64, 300, 64, 64, screenW)
+bird_L1 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
+bird_L2 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
+bird_L3 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
 
 def drawGame():
+    start_time = pygame.time.get_ticks()
     global bg_y
     screen.blit(bg, (0, bg_y))
     player.draw(screen)
     bird_L1.draw(screen)
-    bg_y += 8
+    bird_L2.draw(screen)
+    bird_L3.draw(screen)
+
+    bg_y += 3
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
     pygame.display.update()
