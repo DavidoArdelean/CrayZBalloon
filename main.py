@@ -27,6 +27,7 @@ bg_y = -8688
 fps = 20
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
 
+
 #variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
 font = pygame.font.SysFont('arialblack', 15)
 font_gameover = pygame.font.SysFont('arialblack', 25)
@@ -82,26 +83,56 @@ class Enemy:
                   pygame.image.load('Assets/Birds/FBR3.png'), pygame.image.load('Assets/Birds/FBR4.png'),
                   pygame.image.load('Assets/Birds/FBR5.png'), pygame.image.load('Assets/Birds/FBR6.png')]
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, side, x, y, width, height, end):
+        self.side = side  # true-> _left, false-> _right
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 7
-        self.side = True
+        self.vel = 9
         self.x = x
-        #self.end = end
+        self.end = end
         self.path = [self.x, self.end]
         self.moveCount = 0
         self.collided = False
-        self.visible = True
-        
+
+    def draw(self, surface):
+        self.move()
+        if self.moveCount + 1 >= 12:
+            self.moveCount = 0
+        if self.side:
+            surface.blit(self.bird_left[self.moveCount // 2], (self.x, self.y))
+            self.moveCount += 2
+        else:
+            surface.blit(self.bird_right[self.moveCount // 2], (self.x, self.y))
+            self.moveCount += 2
+
+    def move(self):
+        if self.side:  # daca enemy e in dreapta, sa mearga in stanga
+            if self.end - self.vel < self.path[0]:
+                    self.x -= self.vel
+            else:
+                self.x = -64
+                self.y = random.choice((100, 200, 300, 400))
+                self.x += self.vel
+
+        else:           # daca enemy e in stanga, sa mearga in dreapta
+            if self.x <= self.path[1]:
+                    self.x += self.vel
+            else:
+                self.x = -64
+                self.y = random.choice((100, 200, 300, 400))
+                self.x += self.vel
 
 
-def drawBackground():
+bird_L1 = Enemy(False, -64, 300, 64, 64, screenW)
+
+def drawGame():
     global bg_y
     screen.blit(bg, (0, bg_y))
-    bg_y += 10
+    player.draw(screen)
+    bird_L1.draw(screen)
+    bg_y += 8
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
     pygame.display.update()
@@ -123,10 +154,11 @@ while run:
             run = False
 
     if menu_state == "play":
-        drawBackground()
-        player.draw(screen)
+        drawGame()
         if bg_y >= 0:
             menu_state = "game over"
+
+
         # VERIFICA UP DOWN LEFT RIGHT, UP+LEFT+RIGHT ETC
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] and player.y > player.vel:
