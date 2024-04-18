@@ -5,7 +5,9 @@ pygame.init()
 
 #variables from game images
 pygame.display.set_caption("CrayZ Balloon")
-walk = [pygame.image.load('walk0.png'), pygame.image.load('walk1.png'), pygame.image.load('walk2.png'), pygame.image.load('walk3.png'), pygame.image.load('walk4.png'), pygame.image.load('walk5.png'), pygame.image.load('walk6.png'), pygame.image.load('walk7.png')]
+walk = [pygame.image.load('walk0.png'), pygame.image.load('walk1.png'), pygame.image.load('walk2.png'),
+        pygame.image.load('walk3.png'), pygame.image.load('walk4.png'), pygame.image.load('walk5.png'),
+        pygame.image.load('walk6.png'), pygame.image.load('walk7.png')]
 bg = pygame.image.load("bg.png")
 sb = [pygame.image.load('SB0.png'), pygame.image.load('SB1.png')]
 b_start = pygame.image.load('Assets/menu/b_start.png')
@@ -60,19 +62,16 @@ class Balloon:
         self.left = False
         self.right = False
         self.sprite_index = False
-
+        self.mask = pygame.mask.from_surface(sb[0])  # mask din sb index 0 (primul sprite)
 
     def draw(self, onscreen):
-        # Toggle sprite index
-        self.sprite_index = not self.sprite_index
+        self.sprite_index = not self.sprite_index   # Toggle sprite index
+        current_sprite = sb[self.sprite_index]  # Get the current sprite based on sprite_index
+        onscreen.blit(current_sprite, (self.x, self.y))   # Blit the sprite to the screen
 
-        # Get the current sprite based on sprite_index
-        current_sprite = sb[self.sprite_index]
+    def update_mask(self):
+        self.mask = pygame.mask.from_surface(sb[self.sprite_index])   # update la balloon mask dupa index
 
-        # Blit the sprite to the screen
-        onscreen.blit(current_sprite, (self.x, self.y))
-
-player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
 
 class Enemy:
     bird_left = [pygame.image.load('Assets/Birds/FBL1.png'), pygame.image.load('Assets/Birds/FBL2.png'),
@@ -92,7 +91,7 @@ class Enemy:
         self.end = end
         self.path = [self.x, self.end]
         self.moveCount = 0
-        self.collided = False
+        self.mask = pygame.mask.from_surface(self.bird_left[0])   # mask la Enemy pe din bird_left index 0
 
     def draw(self, surface):
         self.move()
@@ -100,9 +99,11 @@ class Enemy:
             self.moveCount = 0
         if self.side:
             surface.blit(self.bird_left[self.moveCount // 2], (self.x, self.y))
+            self.mask = pygame.mask.from_surface(self.bird_left[self.moveCount // 2])  # Update mask
             self.moveCount += 2
         else:
             surface.blit(self.bird_right[self.moveCount // 2], (self.x, self.y))
+            self.mask = pygame.mask.from_surface(self.bird_right[self.moveCount // 2])  # Update mask
             self.moveCount += 2
 
     def move(self):
@@ -114,9 +115,6 @@ class Enemy:
             if self.x <= self.path[1]:
                     self.x += self.vel
 
-bird_L1 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
-bird_L2 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
-bird_L3 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
 
 def drawGame():
     start_time = pygame.time.get_ticks()
@@ -125,12 +123,22 @@ def drawGame():
     player.draw(screen)
     bird_L1.draw(screen)
     bird_L2.draw(screen)
-    bird_L3.draw(screen)
 
     bg_y += 3
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
     pygame.display.update()
+
+def check_collision(obj1, obj2):   # method ce verifica coliziunea intre 2 obiecte
+    offset_x = obj2.x - obj1.x   # verifica decalaj intre xul obj2 si xul obj1
+    offset_y = obj2.y - obj1.y
+    return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
+
+# INSTANCES of classes
+player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
+bird_L1 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
+# fa sa porneasca dupa cateva secunde !!!!!!
+bird_L2 = Enemy(True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -64)
 
 # MAIN LOOP
 run = True
@@ -150,6 +158,8 @@ while run:
 
     if menu_state == "play":
         drawGame()
+        if check_collision(player, bird_L1) or check_collision(player, bird_L2):
+            print("Collision occurred!")
         if bg_y >= 0:
             menu_state = "game over"
 
