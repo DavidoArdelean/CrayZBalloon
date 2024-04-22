@@ -65,7 +65,7 @@ class Balloon:
         self.mask = pygame.mask.from_surface(sb[0])  # mask din sb index 0 (primul sprite)
 
     def draw(self, onscreen):
-        self.sprite_index = not self.sprite_index   # Toggle sprite index
+        self.sprite_index = not self.sprite_index   # la fiecare loop sprite index se schimba intre 0 si 1 (true-false)
         current_sprite = sb[self.sprite_index]  # Get the current sprite based on sprite_index
         onscreen.blit(current_sprite, (self.x, self.y))   # Blit the sprite to the screen
 
@@ -80,8 +80,17 @@ class Enemy:
     bird_right = [pygame.image.load('Assets/Birds/FBR1.png'), pygame.image.load('Assets/Birds/FBR2.png'),
                   pygame.image.load('Assets/Birds/FBR3.png'), pygame.image.load('Assets/Birds/FBR4.png'),
                   pygame.image.load('Assets/Birds/FBR5.png'), pygame.image.load('Assets/Birds/FBR6.png')]
+    airplane_left = [pygame.image.load('Assets/airplane/AL0.png'), pygame.image.load('Assets/airplane/AL1.png'),
+                     pygame.image.load('Assets/airplane/AL2.png'), pygame.image.load('Assets/airplane/AL3.png'),
+                     pygame.image.load('Assets/airplane/AL4.png'), pygame.image.load('Assets/airplane/AL5.png'),
+                     pygame.image.load('Assets/airplane/AL6.png'), pygame.image.load('Assets/airplane/AL7.png')]
+    airplane_right = [pygame.image.load('Assets/airplane/AR0.png'), pygame.image.load('Assets/airplane/AR1.png'),
+                     pygame.image.load('Assets/airplane/AR2.png'), pygame.image.load('Assets/airplane/AR3.png'),
+                     pygame.image.load('Assets/airplane/AR4.png'), pygame.image.load('Assets/airplane/AR5.png'),
+                     pygame.image.load('Assets/airplane/AR6.png'), pygame.image.load('Assets/airplane/AR7.png')]
 
-    def __init__(self, side, x, y, width, height, end):
+    def __init__(self, side, x, y, width, height, end): # INTRODU EMENY TYPE IN PARAMETRII SI SCHIMBA ACOLO UNDE APARE
+        #self.enemy_type = enemy_type
         self.side = side  # true-> _left, false-> _right
         self.x = x
         self.y = y
@@ -97,9 +106,9 @@ class Enemy:
         self.move()
         if self.moveCount + 1 >= 12:
             self.moveCount = 0
-        if self.side:
+        if self.side:  #daca bird e in dreapta, DRAW in stanga
             surface.blit(self.bird_left[self.moveCount // 2], (self.x, self.y))
-            self.mask = pygame.mask.from_surface(self.bird_left[self.moveCount // 2])  # Update mask
+            self.mask = pygame.mask.from_surface(self.bird_left[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
             self.moveCount += 2
         else:
             surface.blit(self.bird_right[self.moveCount // 2], (self.x, self.y))
@@ -107,11 +116,11 @@ class Enemy:
             self.moveCount += 2
 
     def move(self):
-        if self.side:  # daca enemy e in dreapta, sa mearga in stanga
+        if self.side:  # daca enemy e in dreapta, MOVE in stanga
             if self.end - self.vel < self.path[0]:
                     self.x -= self.vel
 
-        else:           # daca enemy e in stanga, sa mearga in dreapta
+        else:           # daca enemy e in stanga, MOVE in dreapta
             if self.x <= self.path[1]:
                     self.x += self.vel
 
