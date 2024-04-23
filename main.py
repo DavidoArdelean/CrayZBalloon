@@ -1,6 +1,7 @@
 import pygame
 import classes
 import random
+import time
 
 pygame.init()
 
@@ -29,6 +30,7 @@ once_started = False
 bg_y = -8688
 fps = 30
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
+last_spawn_time = pygame.time.get_ticks()  # momentul cand a fost spawnat ultimul enemy
 
 #variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
 font = pygame.font.SysFont('arialblack', 15)
@@ -45,8 +47,7 @@ back_button = classes.Button(screenW / 2 - 125, 390, b_back, 0.5)
 main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 
-def draw_text(text, font, text_col, x,
-              y):  #functie care scrie un text pe screen si ia parametrii (text, fontul, culoare, pozitii x y)
+def draw_text(text, font, text_col, x, y):  #functie care scrie un text pe screen si ia parametrii (text, fontul, culoare, pozitii x y)
     img = font.render(text, True, text_col)  #variabila imagine care contine un font randat cu text
     screen.blit(img, (x, y))
 
@@ -103,6 +104,7 @@ class Enemy:
         self.moveCount = 0
         self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
 
+
     def draw(self, surface):
         self.move()
         if self.moveCount + 1 >= 12:
@@ -128,16 +130,16 @@ class Enemy:
 
 
 def drawGame():
-    start_time = pygame.time.get_ticks()
     global bg_y
-    screen.blit(bg, (0, bg_y))
-    player.draw(screen)
-    bird_L1.draw(screen)
-    (airplane_R1.draw(screen))
-
     bg_y += 3
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
+
+    screen.blit(bg, (0, bg_y))
+    player.draw(screen)
+    bird_L1.draw(screen)
+    airplane_R1.draw(screen)
+
     pygame.display.update()
 
 
@@ -205,8 +207,7 @@ while run:
                 player.down = True
                 player.left = True
                 player.right = False
-            elif keys[
-                pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
+            elif keys[pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
                 player.y += player.vel
                 player.x += player.vel / 2
                 player.up = False
