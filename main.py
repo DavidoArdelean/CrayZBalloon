@@ -1,6 +1,7 @@
 import pygame
 import classes
 import random
+
 pygame.init()
 
 #variables from game images
@@ -29,7 +30,6 @@ bg_y = -8688
 fps = 30
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
 
-
 #variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
 font = pygame.font.SysFont('arialblack', 15)
 font_gameover = pygame.font.SysFont('arialblack', 25)
@@ -37,15 +37,16 @@ font_gameover = pygame.font.SysFont('arialblack', 25)
 TEXT_COL = (255, 255, 255)
 
 # button instances
-start_button = classes.Button(screenW/2 - 125, 150, b_start, 0.5)
-resume_button = classes.Button(screenW/2 - 125, 150, b_resume, 0.5)
-hs_button = classes.Button(screenW/2 - 125, 230, b_highscore, 0.5)
-quit_button = classes.Button(screenW/2 - 125, 310, b_quit, 0.5)
-back_button = classes.Button(screenW/2 - 125, 390, b_back, 0.5)
-main_button = classes.Button(screenW/2 - 125, 390, b_main, 0.5)
+start_button = classes.Button(screenW / 2 - 125, 150, b_start, 0.5)
+resume_button = classes.Button(screenW / 2 - 125, 150, b_resume, 0.5)
+hs_button = classes.Button(screenW / 2 - 125, 230, b_highscore, 0.5)
+quit_button = classes.Button(screenW / 2 - 125, 310, b_quit, 0.5)
+back_button = classes.Button(screenW / 2 - 125, 390, b_back, 0.5)
+main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 
-def draw_text(text, font, text_col, x, y):  #functie care scrie un text pe screen si ia parametrii (text, fontul, culoare, pozitii x y)
+def draw_text(text, font, text_col, x,
+              y):  #functie care scrie un text pe screen si ia parametrii (text, fontul, culoare, pozitii x y)
     img = font.render(text, True, text_col)  #variabila imagine care contine un font randat cu text
     screen.blit(img, (x, y))
 
@@ -65,12 +66,12 @@ class Balloon:
         self.mask = pygame.mask.from_surface(sb[0])  # mask din sb index 0 (primul sprite)
 
     def draw(self, onscreen):
-        self.sprite_index = not self.sprite_index   # la fiecare loop sprite index se schimba intre 0 si 1 (true-false)
+        self.sprite_index = not self.sprite_index  # la fiecare loop sprite index se schimba intre 0 si 1 (true-false)
         current_sprite = sb[self.sprite_index]  # Get the current sprite based on sprite_index
-        onscreen.blit(current_sprite, (self.x, self.y))   # Blit the sprite to the screen
+        onscreen.blit(current_sprite, (self.x, self.y))  # Blit the sprite to the screen
 
     def update_mask(self):
-        self.mask = pygame.mask.from_surface(sb[self.sprite_index])   # update la balloon mask dupa index
+        self.mask = pygame.mask.from_surface(sb[self.sprite_index])  # update la balloon mask dupa index
 
 
 class Enemy:
@@ -85,11 +86,11 @@ class Enemy:
                      pygame.image.load('Assets/airplane/AL4.png'), pygame.image.load('Assets/airplane/AL5.png'),
                      pygame.image.load('Assets/airplane/AL6.png'), pygame.image.load('Assets/airplane/AL7.png')]
     airplane_right = [pygame.image.load('Assets/airplane/AR0.png'), pygame.image.load('Assets/airplane/AR1.png'),
-                     pygame.image.load('Assets/airplane/AR2.png'), pygame.image.load('Assets/airplane/AR3.png'),
-                     pygame.image.load('Assets/airplane/AR4.png'), pygame.image.load('Assets/airplane/AR5.png'),
-                     pygame.image.load('Assets/airplane/AR6.png'), pygame.image.load('Assets/airplane/AR7.png')]
+                      pygame.image.load('Assets/airplane/AR2.png'), pygame.image.load('Assets/airplane/AR3.png'),
+                      pygame.image.load('Assets/airplane/AR4.png'), pygame.image.load('Assets/airplane/AR5.png'),
+                      pygame.image.load('Assets/airplane/AR6.png'), pygame.image.load('Assets/airplane/AR7.png')]
 
-    def __init__(self, side, x, y, width, height, end): # INTRODU EMENY TYPE IN PARAMETRII SI SCHIMBA ACOLO UNDE APARE
+    def __init__(self, side, x, y, width, height, end):  # INTRODU EMENY TYPE IN PARAMETRII SI SCHIMBA ACOLO UNDE APARE
         #self.enemy_type = enemy_type
         self.side = side  # true-> _left, false-> _right
         self.x = x
@@ -100,7 +101,7 @@ class Enemy:
         self.end = end
         self.path = [self.x, self.end]
         self.moveCount = 0
-        self.mask = pygame.mask.from_surface(self.bird_left[0])   # mask la Enemy pe din bird_left index 0
+        self.mask = pygame.mask.from_surface(self.bird_left[0])  # mask la Enemy pe din bird_left index 0
 
     def draw(self, surface):
         self.move()
@@ -108,7 +109,8 @@ class Enemy:
             self.moveCount = 0
         if self.side:  #daca bird e in dreapta, DRAW in stanga
             surface.blit(self.bird_left[self.moveCount // 2], (self.x, self.y))
-            self.mask = pygame.mask.from_surface(self.bird_left[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
+            self.mask = pygame.mask.from_surface(
+                self.bird_left[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
             self.moveCount += 2
         else:
             surface.blit(self.bird_right[self.moveCount // 2], (self.x, self.y))
@@ -118,11 +120,11 @@ class Enemy:
     def move(self):
         if self.side:  # daca enemy e in dreapta, MOVE in stanga
             if self.end - self.vel < self.path[0]:
-                    self.x -= self.vel
+                self.x -= self.vel
 
-        else:           # daca enemy e in stanga, MOVE in dreapta
+        else:  # daca enemy e in stanga, MOVE in dreapta
             if self.x <= self.path[1]:
-                    self.x += self.vel
+                self.x += self.vel
 
 
 def drawGame():
@@ -138,13 +140,15 @@ def drawGame():
         bg_y = bg.get_height()
     pygame.display.update()
 
-def check_collision(obj1, obj2):   # method ce verifica coliziunea intre 2 obiecte
-    offset_x = obj2.x - obj1.x   # verifica decalaj intre xul obj2 si xul obj1
+
+def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiecte
+    offset_x = obj2.x - obj1.x  # verifica decalaj intre xul obj2 si xul obj1
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
 
+
 # INSTANCES of classes
-player = Balloon(screenW // 2 - sb[0].get_width()/2, screenH - sb[0].get_height(), 128, 185)
+player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
 bird_L1 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
 # fa sa porneasca dupa cateva secunde !!!!!!
 bird_L2 = Enemy(True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -64)
@@ -172,20 +176,19 @@ while run:
         if bg_y >= 0:
             menu_state = "game over"
 
-
         # VERIFICA UP DOWN LEFT RIGHT, UP+LEFT+RIGHT ETC
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] and player.y > player.vel:
             if keys[pygame.K_LEFT] and player.y > player.vel and player.x > player.vel:
                 player.y -= player.vel
-                player.x -= player.vel/2
+                player.x -= player.vel / 2
                 player.up = True
                 player.down = False
                 player.left = True
                 player.right = False
             elif keys[pygame.K_RIGHT] and player.y > player.vel and player.x < screenW - player.width - player.vel:
                 player.y -= player.vel
-                player.x += player.vel/2
+                player.x += player.vel / 2
                 player.up = True
                 player.down = False
                 player.left = False
@@ -197,14 +200,15 @@ while run:
         elif keys[pygame.K_DOWN] and player.y < screenH - player.height - player.vel:
             if keys[pygame.K_LEFT] and player.y < screenH - player.height - player.vel and player.x > player.vel:
                 player.y += player.vel
-                player.x -= player.vel/2
+                player.x -= player.vel / 2
                 player.up = False
                 player.down = True
                 player.left = True
                 player.right = False
-            elif keys[pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
+            elif keys[
+                pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
                 player.y += player.vel
-                player.x += player.vel/2
+                player.x += player.vel / 2
                 player.up = False
                 player.down = True
                 player.left = False
@@ -253,7 +257,6 @@ while run:
             player.right = False
             bg_y = -8688
             menu_state = "main"
-
 
     # EVENT CHECK
     for event in pygame.event.get():
