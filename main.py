@@ -90,31 +90,31 @@ class Enemy:
                       pygame.image.load('Assets/airplane/AR4.png'), pygame.image.load('Assets/airplane/AR5.png'),
                       pygame.image.load('Assets/airplane/AR6.png'), pygame.image.load('Assets/airplane/AR7.png')]
 
-    def __init__(self, side, x, y, width, height, end):  # INTRODU EMENY TYPE IN PARAMETRII SI SCHIMBA ACOLO UNDE APARE
-        #self.enemy_type = enemy_type
+    def __init__(self, enemy_type, side, x, y, width, height, end, vel):
+        self.enemy_type = enemy_type
         self.side = side  # true-> _left, false-> _right
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 3.2
+        self.vel = vel
         self.end = end
         self.path = [self.x, self.end]
         self.moveCount = 0
-        self.mask = pygame.mask.from_surface(self.bird_left[0])  # mask la Enemy pe din bird_left index 0
+        self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
 
     def draw(self, surface):
         self.move()
         if self.moveCount + 1 >= 12:
             self.moveCount = 0
         if self.side:  #daca bird e in dreapta, DRAW in stanga
-            surface.blit(self.bird_left[self.moveCount // 2], (self.x, self.y))
+            surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
             self.mask = pygame.mask.from_surface(
-                self.bird_left[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
+                self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
             self.moveCount += 2
         else:
-            surface.blit(self.bird_right[self.moveCount // 2], (self.x, self.y))
-            self.mask = pygame.mask.from_surface(self.bird_right[self.moveCount // 2])  # Update mask
+            surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
+            self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
             self.moveCount += 2
 
     def move(self):
@@ -133,7 +133,7 @@ def drawGame():
     screen.blit(bg, (0, bg_y))
     player.draw(screen)
     bird_L1.draw(screen)
-    bird_L2.draw(screen)
+    (airplane_R1.draw(screen))
 
     bg_y += 3
     if bg_y < bg.get_height() * -1:
@@ -149,9 +149,9 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
-bird_L1 = Enemy(False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW)
+bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, 3.2)
 # fa sa porneasca dupa cateva secunde !!!!!!
-bird_L2 = Enemy(True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -64)
+airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 275, 115, -275, 4)
 
 # MAIN LOOP
 run = True
@@ -171,7 +171,7 @@ while run:
 
     if menu_state == "play":
         drawGame()
-        if check_collision(player, bird_L1) or check_collision(player, bird_L2):
+        if check_collision(player, bird_L1) or check_collision(player, airplane_R1):
             print("Collision occurred!")
         if bg_y >= 0:
             menu_state = "game over"
