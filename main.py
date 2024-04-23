@@ -1,8 +1,11 @@
+'''
+cauta alta forma pentru delay intre objects in loc de screenW * 2
+fa functie sa dispara obiectul dupa ce trece de ecran
+fa sa se reseteze TOT in caz de coliziune -> menu_state = 'gameover'
+'''
 import pygame
 import classes
 import random
-import time
-
 pygame.init()
 
 #variables from game images
@@ -21,7 +24,7 @@ b_main = pygame.image.load('Assets/menu/b_main.png')
 
 screenW = 512
 screenH = 512
-screen = pygame.display.set_mode((screenW, screenH))
+screen = pygame.display.set_mode((screenW, screenH), pygame.FULLSCREEN)
 surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
 
 #game variables
@@ -30,7 +33,6 @@ once_started = False
 bg_y = -8688
 fps = 30
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
-last_spawn_time = pygame.time.get_ticks()  # momentul cand a fost spawnat ultimul enemy
 
 #variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
 font = pygame.font.SysFont('arialblack', 15)
@@ -104,7 +106,6 @@ class Enemy:
         self.moveCount = 0
         self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
 
-
     def draw(self, surface):
         self.move()
         if self.moveCount + 1 >= 12:
@@ -131,11 +132,12 @@ class Enemy:
 
 def drawGame():
     global bg_y
+    global last_spawn_time
     bg_y += 3
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
-
     screen.blit(bg, (0, bg_y))
+
     player.draw(screen)
     bird_L1.draw(screen)
     airplane_R1.draw(screen)
@@ -151,9 +153,8 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
-bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, 3.2)
-# fa sa porneasca dupa cateva secunde !!!!!!
-airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 275, 115, -275, 4)
+bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, 3.2)
+airplane_R1 = Enemy(Enemy.airplane_left, True, screenW*2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, 4)
 
 # MAIN LOOP
 run = True
@@ -174,7 +175,7 @@ while run:
     if menu_state == "play":
         drawGame()
         if check_collision(player, bird_L1) or check_collision(player, airplane_R1):
-            print("Collision occurred!")
+            print("Collision occurred!")  # NU SE RESETEAZA LA GAMEOVER IN COLIZIUNE
         if bg_y >= 0:
             menu_state = "game over"
 
