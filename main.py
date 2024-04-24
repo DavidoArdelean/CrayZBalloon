@@ -1,6 +1,7 @@
 '''
 cauta alta forma pentru delay intre objects in loc de screenW * 2
 fa functie sa dispara obiectul dupa ce trece de ecran
+cauta despre Sprite class si group class
 fa sa se reseteze TOT in caz de coliziune -> menu_state = 'gameover'
 '''
 import pygame
@@ -24,7 +25,7 @@ b_main = pygame.image.load('Assets/menu/b_main.png')
 
 screenW = 512
 screenH = 512
-screen = pygame.display.set_mode((screenW, screenH), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((screenW, screenH))
 surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
 
 #game variables
