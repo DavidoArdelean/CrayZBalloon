@@ -1,53 +1,13 @@
 '''
-cauta alta forma pentru delay intre objects in loc de screenW * 2
-fa functie sa dispara obiectul dupa ce trece de ecran
-cauta despre Sprite class si group class
+cauta alta forma pentru delay intre objects in loc de screenW *
+deseneaza sprites
 fa sa se reseteze TOT in caz de coliziune -> menu_state = 'gameover'
 '''
+
 import pygame
 import classes
 import random
 pygame.init()
-
-#variables from game images
-pygame.display.set_caption("CrayZ Balloon")
-walk = [pygame.image.load('walk0.png'), pygame.image.load('walk1.png'), pygame.image.load('walk2.png'),
-        pygame.image.load('walk3.png'), pygame.image.load('walk4.png'), pygame.image.load('walk5.png'),
-        pygame.image.load('walk6.png'), pygame.image.load('walk7.png')]
-bg = pygame.image.load("bg.png")
-sb = [pygame.image.load('SB0.png'), pygame.image.load('SB1.png')]
-b_start = pygame.image.load('Assets/menu/b_start.png')
-b_highscore = pygame.image.load('Assets/menu/b_highscore.png')
-b_quit = pygame.image.load('Assets/menu/b_quit.png')
-b_resume = pygame.image.load('Assets/menu/b_resume.png')
-b_back = pygame.image.load('Assets/menu/b_back.png')
-b_main = pygame.image.load('Assets/menu/b_main.png')
-
-screenW = 512
-screenH = 512
-screen = pygame.display.set_mode((screenW, screenH))
-surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
-
-#game variables
-menu_state = "main"
-once_started = False
-bg_y = -8688
-fps = 30
-clock = pygame.time.Clock()  # Create a clock object to control the frame rate
-
-#variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
-font = pygame.font.SysFont('arialblack', 15)
-font_gameover = pygame.font.SysFont('arialblack', 25)
-#variabila TEXT_COL care contine culoare fontului care e alb
-TEXT_COL = (255, 255, 255)
-
-# button instances
-start_button = classes.Button(screenW / 2 - 125, 150, b_start, 0.5)
-resume_button = classes.Button(screenW / 2 - 125, 150, b_resume, 0.5)
-hs_button = classes.Button(screenW / 2 - 125, 230, b_highscore, 0.5)
-quit_button = classes.Button(screenW / 2 - 125, 310, b_quit, 0.5)
-back_button = classes.Button(screenW / 2 - 125, 390, b_back, 0.5)
-main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 
 def draw_text(text, font, text_col, x, y):  #functie care scrie un text pe screen si ia parametrii (text, fontul, culoare, pozitii x y)
@@ -112,14 +72,16 @@ class Enemy:
         if self.moveCount + 1 >= 12:
             self.moveCount = 0
         if self.side:  #daca bird e in dreapta, DRAW in stanga
-            surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
-            self.mask = pygame.mask.from_surface(
-                self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
-            self.moveCount += 2
+            if self.x >= -self.width - 10:
+                surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
+                self.mask = pygame.mask.from_surface(
+                    self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
+                self.moveCount += 2
         else:
-            surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
-            self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
-            self.moveCount += 2
+            if self.x <= self.end:
+                surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
+                self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
+                self.moveCount += 2
 
     def move(self):
         if self.side:  # daca enemy e in dreapta, MOVE in stanga
@@ -133,7 +95,6 @@ class Enemy:
 
 def drawGame():
     global bg_y
-    global last_spawn_time
     bg_y += 3
     if bg_y < bg.get_height() * -1:
         bg_y = bg.get_height()
@@ -151,6 +112,46 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
 
+#variables from game images
+pygame.display.set_caption("CrayZ Balloon")
+walk = [pygame.image.load('walk0.png'), pygame.image.load('walk1.png'), pygame.image.load('walk2.png'),
+        pygame.image.load('walk3.png'), pygame.image.load('walk4.png'), pygame.image.load('walk5.png'),
+        pygame.image.load('walk6.png'), pygame.image.load('walk7.png')]
+bg = pygame.image.load("bg.png")
+sb = [pygame.image.load('SB0.png'), pygame.image.load('SB1.png')]
+b_start = pygame.image.load('Assets/menu/b_start.png')
+b_highscore = pygame.image.load('Assets/menu/b_highscore.png')
+b_quit = pygame.image.load('Assets/menu/b_quit.png')
+b_resume = pygame.image.load('Assets/menu/b_resume.png')
+b_back = pygame.image.load('Assets/menu/b_back.png')
+b_main = pygame.image.load('Assets/menu/b_main.png')
+
+#window variables
+screenW = 512
+screenH = 512
+screen = pygame.display.set_mode((screenW, screenH))
+surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
+
+#game variables
+menu_state = "main"
+once_started = False
+bg_y = -8688
+fps = 30
+clock = pygame.time.Clock()  # Create a clock object to control the frame rate
+
+#variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
+font = pygame.font.SysFont('arialblack', 15)
+font_gameover = pygame.font.SysFont('arialblack', 25)
+#variabila TEXT_COL care contine culoare fontului care e alb
+TEXT_COL = (255, 255, 255)
+
+# button instances
+start_button = classes.Button(screenW / 2 - 125, 150, b_start, 0.5)
+resume_button = classes.Button(screenW / 2 - 125, 150, b_resume, 0.5)
+hs_button = classes.Button(screenW / 2 - 125, 230, b_highscore, 0.5)
+quit_button = classes.Button(screenW / 2 - 125, 310, b_quit, 0.5)
+back_button = classes.Button(screenW / 2 - 125, 390, b_back, 0.5)
+main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
@@ -261,7 +262,7 @@ while run:
             bg_y = -8688
             menu_state = "main"
 
-    # EVENT CHECK
+    # Event checker
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
