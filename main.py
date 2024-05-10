@@ -1,7 +1,8 @@
 '''
 cauta alta forma pentru delay intre objects in loc de screenW *
 deseneaza sprites
-fa sa se reseteze TOT in caz de coliziune -> menu_state = 'gameover'
+invata sprite groups pt o collision mai simpla ? ca sa nu scrii 100 de if-uri
+fa in enemy class ca meteoritul sa mearga pe diagonala
 '''
 
 import pygame
@@ -53,8 +54,16 @@ class Enemy:
                       pygame.image.load('Assets/airplane/AR2.png'), pygame.image.load('Assets/airplane/AR3.png'),
                       pygame.image.load('Assets/airplane/AR4.png'), pygame.image.load('Assets/airplane/AR5.png'),
                       pygame.image.load('Assets/airplane/AR6.png'), pygame.image.load('Assets/airplane/AR7.png')]
+    meteor_left = [pygame.image.load('Assets/meteor/ML0.png'), pygame.image.load('Assets/meteor/ML0.png'),
+                   pygame.image.load('Assets/meteor/ML1.png'), pygame.image.load('Assets/meteor/ML1.png'),
+                   pygame.image.load('Assets/meteor/ML2.png'), pygame.image.load('Assets/meteor/ML2.png'),
+                   pygame.image.load('Assets/meteor/ML3.png'), pygame.image.load('Assets/meteor/ML3.png')]
+    meteor_right = [pygame.image.load('Assets/meteor/MR0.png'), pygame.image.load('Assets/meteor/MR0.png'),
+                    pygame.image.load('Assets/meteor/MR1.png'), pygame.image.load('Assets/meteor/MR1.png'),
+                    pygame.image.load('Assets/meteor/MR2.png'), pygame.image.load('Assets/meteor/MR2.png'),
+                    pygame.image.load('Assets/meteor/MR3.png'), pygame.image.load('Assets/meteor/MR3.png')]
 
-    def __init__(self, enemy_type, side, x, y, width, height, end, vel):
+    def __init__(self, enemy_type, side, x, y, width, height, end, vel, sprite_iteration):
         self.enemy_type = enemy_type
         self.side = side  # true-> _left, false-> _right
         self.x = x
@@ -65,23 +74,24 @@ class Enemy:
         self.end = end
         self.path = [self.x, self.end]
         self.moveCount = 0
+        self.sprite_iteration = sprite_iteration
         self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
 
     def draw(self, surface):
         self.move()
-        if self.moveCount + 1 >= 12:
+        if self.moveCount + 1 >= self.sprite_iteration:
             self.moveCount = 0
         if self.side:  #daca bird e in dreapta, DRAW in stanga
             if self.x >= -self.width - 10:
                 surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
                 self.mask = pygame.mask.from_surface(
                     self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
-                self.moveCount += 2
+                self.moveCount += 1
         else:
             if self.x <= self.end:
                 surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
                 self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
-                self.moveCount += 2
+                self.moveCount += 1
 
     def move(self):
         if self.side:  # daca enemy e in dreapta, MOVE in stanga
@@ -103,6 +113,7 @@ def drawGame():
     player.draw(screen)
     bird_L1.draw(screen)
     airplane_R1.draw(screen)
+    meteor_L1.draw(screen)
 
     pygame.display.update()
 
@@ -111,6 +122,22 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
     offset_x = obj2.x - obj1.x  # verifica decalaj intre xul obj2 si xul obj1
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
+
+
+def reset_game(): #  resetam toate variabilele ca si locatie a obiectelor
+    global bg_y
+    global bird_L1
+    global airplane_R1
+    global counter_started
+    global meteor_L1
+    counter_started = False
+    bg_y = -8688
+    player.x = screenW // 2 - sb[0].get_width() / 2
+    player.y = screenH - sb[0].get_height()
+    bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, 3.2, 12)
+    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, 4, 12)
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((0, 128, 256, 384)), 128, 128, screenW + 10, 6, 16)
+
 
 #variables from game images
 pygame.display.set_caption("CrayZ Balloon")
@@ -134,13 +161,21 @@ surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
 
 #game variables
 menu_state = "main"
-once_started = False
 bg_y = -8688
 fps = 30
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
 
+#score variables
+counter = 0
+score = 0
+counter_started = False
+score_file = open("scores.txt", "r")  # deschidem fisierul scores.txt pentru read+write
+score_file.seek(0)  # duce pointer la index 0 in fisier ca sa poata citi textul
+highest_score = int(score_file.read())
+score_file.close()
+
 #variabila font reprezentand fontul scrisului cu toate detaliile (scris si size)
-font = pygame.font.SysFont('arialblack', 15)
+font = pygame.font.SysFont('arialblack', 20)
 font_gameover = pygame.font.SysFont('arialblack', 25)
 #variabila TEXT_COL care contine culoare fontului care e alb
 TEXT_COL = (255, 255, 255)
@@ -155,20 +190,23 @@ main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
-bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, 3.2)
-airplane_R1 = Enemy(Enemy.airplane_left, True, screenW*2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, 4)
+bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, 3.2, 12)
+airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, 4, 12)
+meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((0, 128, 256, 384)), 128, 128, screenW + 10, 4, 16)
 
 # MAIN LOOP
 run = True
 while run:
     clock.tick(fps)
+
     # check menu state
     if menu_state == "main":
-
+        reset_game() # resetam variables cand suntem in main
         screen.fill((52, 50, 150))
         if start_button.draw(screen):
             menu_state = "play"
-            once_started = True
+            counter = 0  # Reset counter when starting gameplay
+            counter_started = True
         if hs_button.draw(screen):
             menu_state = "highscore"
         if quit_button.draw(screen):
@@ -176,8 +214,18 @@ while run:
 
     if menu_state == "play":
         drawGame()
-        if check_collision(player, bird_L1) or check_collision(player, airplane_R1):
-            print("Collision occurred!")  # NU SE RESETEAZA LA GAMEOVER IN COLIZIUNE
+
+        if counter_started:  # Check if the counter has started
+            counter += 1  # Increment the counter by 1 each frame
+            score = counter // fps  # Calculate the score based on frames per second
+        draw_text(str(score), font, TEXT_COL, 470, 10)
+        score_file = open("scores.txt", "r+")
+        if score > highest_score:  # daca score e mai mare decat highscore
+            highest_score = score
+            score_file.write(str(highest_score))  # score devine highscore
+
+        if check_collision(player, bird_L1) or check_collision(player, airplane_R1) or check_collision(player, meteor_L1):
+            menu_state = "game over"
         if bg_y >= 0:
             menu_state = "game over"
 
@@ -241,25 +289,22 @@ while run:
 
     if menu_state == "highscore":
         screen.fill((52, 50, 150))
-        #arata back button
-        draw_text("Highscore:", font, TEXT_COL, 200, screenH / 2 - 10)
-        if back_button.draw(screen):
+
+        with open("scores.txt", "r") as score_file:
+            draw_text("Highscore: " + str(score_file.read()), font, TEXT_COL, 180, screenH / 2 - 10)
+
+        if back_button.draw(screen):  # arata back button
             menu_state = "main"
 
     if menu_state == "game over":
         screen.fill((52, 50, 150))
-        draw_text("Your score was :", font_gameover, TEXT_COL, 100, screenH / 2 - 100)
+
+        draw_text("Your score : " + str(score), font_gameover, TEXT_COL, 100, screenH / 2 - 100)
+        draw_text("Highest score : " + str(highest_score), font_gameover, TEXT_COL, 100, screenH / 2 - 50)
+
         if quit_button.draw(screen):
             run = False
         if main_button.draw(screen):
-            #daca e game over, se reseteaza tot cand se intra pe main menu
-            player.x = screenW // 2 - sb[0].get_width() / 2
-            player.y = screenH - sb[0].get_height()
-            player.up = False
-            player.down = False
-            player.left = False
-            player.right = False
-            bg_y = -8688
             menu_state = "main"
 
     # Event checker
