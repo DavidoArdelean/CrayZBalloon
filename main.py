@@ -1,8 +1,8 @@
 '''
-cauta alta forma pentru delay intre objects in loc de screenW *
+cauta alta forma pentru delay intre objects in loc de screenW * .. bravo ba, ai gasit cu bg_y claps*
 fa balonul mai mic
-deseneaza inca un enemy
-invata sprite groups pt o collision mai simpla ? ca sa nu scrii 100 de if-uri
+deseneaza enemies: nori de plaie, vrajitoare pe matura
+invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
 fa omul sa mearga in balon si sa deseneze balonul si celelalte abea dupa ce omul ajunge la y(x)
 '''
 
@@ -97,26 +97,27 @@ class Enemy:
                 self.moveCount += 1
 
     def move(self):
-        if self.meteor_enemy:  # daca enemy este meteorit, trebuie sa mearga pe diagonala
-            if self.side:  # daca enemy e in dreapta, MOVE in stanga
-                if self.x_end - self.vel < self.x_path[0]:
-                    self.x -= self.vel
-                if self.y <= self.y_path[1]:  # identic cu cea de jos pt ca balonul merge tot pe axa Y in jos
-                    self.y += self.vel
+        if bg_y > -8000:
+            if self.meteor_enemy:  # daca enemy este meteorit, trebuie sa mearga pe diagonala
+                if self.side:  # daca enemy e in dreapta, MOVE in stanga
+                    if self.x_end - self.vel < self.x_path[0]:
+                        self.x -= self.vel
+                    if self.y <= self.y_path[1]:  # identic cu cea de jos pt ca balonul merge tot pe axa Y in jos
+                        self.y += self.vel
 
-            else:  # daca enemy e in stanga, MOVE in dreapta
-                if self.x <= self.x_path[1]:
-                    self.x += self.vel
-                if self.y <= self.y_path[1]:  # identic cu cea de sus
-                    self.y += self.vel
-        else:
-            if self.side:  # daca enemy e in dreapta, MOVE in stanga
-                if self.x_end - self.vel < self.x_path[0]:
-                    self.x -= self.vel
+                else:  # daca enemy e in stanga, MOVE in dreapta
+                    if self.x <= self.x_path[1]:
+                        self.x += self.vel
+                    if self.y <= self.y_path[1]:  # identic cu cea de sus
+                        self.y += self.vel
+            else:
+                if self.side:  # daca enemy e in dreapta, MOVE in stanga
+                    if self.x_end - self.vel < self.x_path[0]:
+                        self.x -= self.vel
 
-            else:  # daca enemy e in stanga, MOVE in dreapta
-                if self.x <= self.x_path[1]:
-                    self.x += self.vel
+                else:  # daca enemy e in stanga, MOVE in dreapta
+                    if self.x <= self.x_path[1]:
+                        self.x += self.vel
 
 
 def drawGame():
