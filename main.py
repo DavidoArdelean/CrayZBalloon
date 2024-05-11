@@ -1,8 +1,9 @@
 '''
 cauta alta forma pentru delay intre objects in loc de screenW *
-deseneaza sprites
+fa balonul mai mic
+deseneaza inca un enemy
 invata sprite groups pt o collision mai simpla ? ca sa nu scrii 100 de if-uri
-fa in enemy class ca meteoritul sa mearga pe diagonala
+fa omul sa mearga in balon si sa deseneze balonul si celelalte abea dupa ce omul ajunge la y(x)
 '''
 
 import pygame
@@ -54,16 +55,16 @@ class Enemy:
                       pygame.image.load('Assets/airplane/AR2.png'), pygame.image.load('Assets/airplane/AR3.png'),
                       pygame.image.load('Assets/airplane/AR4.png'), pygame.image.load('Assets/airplane/AR5.png'),
                       pygame.image.load('Assets/airplane/AR6.png'), pygame.image.load('Assets/airplane/AR7.png')]
-    meteor_left = [pygame.image.load('Assets/meteor/ML0.png'), pygame.image.load('Assets/meteor/ML0.png'),
-                   pygame.image.load('Assets/meteor/ML1.png'), pygame.image.load('Assets/meteor/ML1.png'),
-                   pygame.image.load('Assets/meteor/ML2.png'), pygame.image.load('Assets/meteor/ML2.png'),
-                   pygame.image.load('Assets/meteor/ML3.png'), pygame.image.load('Assets/meteor/ML3.png')]
-    meteor_right = [pygame.image.load('Assets/meteor/MR0.png'), pygame.image.load('Assets/meteor/MR0.png'),
-                    pygame.image.load('Assets/meteor/MR1.png'), pygame.image.load('Assets/meteor/MR1.png'),
-                    pygame.image.load('Assets/meteor/MR2.png'), pygame.image.load('Assets/meteor/MR2.png'),
-                    pygame.image.load('Assets/meteor/MR3.png'), pygame.image.load('Assets/meteor/MR3.png')]
+    meteor_left = [pygame.image.load('Assets/meteor/ML0.png'), pygame.image.load('Assets/meteor/ML1.png'),
+                   pygame.image.load('Assets/meteor/ML2.png'), pygame.image.load('Assets/meteor/ML3.png'),
+                   pygame.image.load('Assets/meteor/ML4.png'), pygame.image.load('Assets/meteor/ML5.png'),
+                   pygame.image.load('Assets/meteor/ML6.png'), pygame.image.load('Assets/meteor/ML7.png')]
+    meteor_right = [pygame.image.load('Assets/meteor/MR0.png'), pygame.image.load('Assets/meteor/MR1.png'),
+                   pygame.image.load('Assets/meteor/MR2.png'), pygame.image.load('Assets/meteor/MR3.png'),
+                   pygame.image.load('Assets/meteor/MR4.png'), pygame.image.load('Assets/meteor/MR5.png'),
+                   pygame.image.load('Assets/meteor/MR6.png'), pygame.image.load('Assets/meteor/MR7.png')]
 
-    def __init__(self, enemy_type, side, x, y, width, height, end, vel, sprite_iteration):
+    def __init__(self, enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, meteor_enemy):
         self.enemy_type = enemy_type
         self.side = side  # true-> _left, false-> _right
         self.x = x
@@ -71,36 +72,51 @@ class Enemy:
         self.width = width
         self.height = height
         self.vel = vel
-        self.end = end
-        self.path = [self.x, self.end]
+        self.x_end = x_end
+        self.y_end = y_end
+        self.x_path = [self.x, self.x_end]
+        self.y_path = [self.y, self.y_end]
         self.moveCount = 0
         self.sprite_iteration = sprite_iteration
+        self.meteor_enemy = meteor_enemy
         self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
 
     def draw(self, surface):
         self.move()
         if self.moveCount + 1 >= self.sprite_iteration:
             self.moveCount = 0
-        if self.side:  #daca bird e in dreapta, DRAW in stanga
+        if self.side:  #daca enemy e in dreapta, DRAW in stanga
             if self.x >= -self.width - 10:
                 surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
-                self.mask = pygame.mask.from_surface(
-                    self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu bird_left
+                self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu enemy_left
                 self.moveCount += 1
         else:
-            if self.x <= self.end:
+            if self.x <= self.x_end:
                 surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
                 self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
                 self.moveCount += 1
 
     def move(self):
-        if self.side:  # daca enemy e in dreapta, MOVE in stanga
-            if self.end - self.vel < self.path[0]:
-                self.x -= self.vel
+        if self.meteor_enemy:  # daca enemy este meteorit, trebuie sa mearga pe diagonala
+            if self.side:  # daca enemy e in dreapta, MOVE in stanga
+                if self.x_end - self.vel < self.x_path[0]:
+                    self.x -= self.vel
+                if self.y <= self.y_path[1]:  # identic cu cea de jos pt ca balonul merge tot pe axa Y in jos
+                    self.y += self.vel
 
-        else:  # daca enemy e in stanga, MOVE in dreapta
-            if self.x <= self.path[1]:
-                self.x += self.vel
+            else:  # daca enemy e in stanga, MOVE in dreapta
+                if self.x <= self.x_path[1]:
+                    self.x += self.vel
+                if self.y <= self.y_path[1]:  # identic cu cea de sus
+                    self.y += self.vel
+        else:
+            if self.side:  # daca enemy e in dreapta, MOVE in stanga
+                if self.x_end - self.vel < self.x_path[0]:
+                    self.x -= self.vel
+
+            else:  # daca enemy e in stanga, MOVE in dreapta
+                if self.x <= self.x_path[1]:
+                    self.x += self.vel
 
 
 def drawGame():
@@ -114,6 +130,7 @@ def drawGame():
     bird_L1.draw(screen)
     airplane_R1.draw(screen)
     meteor_L1.draw(screen)
+    meteor_R1.draw(screen)
 
     pygame.display.update()
 
@@ -124,19 +141,23 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
 
 
-def reset_game(): #  resetam toate variabilele ca si locatie a obiectelor
+def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     global bg_y
     global bird_L1
     global airplane_R1
     global counter_started
     global meteor_L1
+    global meteor_R1
     counter_started = False
     bg_y = -8688
     player.x = screenW // 2 - sb[0].get_width() / 2
     player.y = screenH - sb[0].get_height()
-    bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, 3.2, 12)
-    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, 4, 12)
-    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((0, 128, 256, 384)), 128, 128, screenW + 10, 6, 16)
+
+    # def __init__(self, enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, meteor_enemy):
+    bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, screenH + 10, 3.2, 12, False)
+    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, screenH + 10, 4, 12, False)
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-256, -128, 0, 128)), 128, 128, screenW + 10, screenH + 10, 6, 16, True)
+    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 10, random.choice((-256, -128, 0, 128)), 128, 128, -138, screenH + 10, 6, 16, True)
 
 
 #variables from game images
@@ -190,9 +211,10 @@ main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
-bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, 3.2, 12)
-airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, 4, 12)
-meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((0, 128, 256, 384)), 128, 128, screenW + 10, 4, 16)
+bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, screenH + 10, 3.2, 12, False)
+airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, screenH + 10, 4, 12, False)
+meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((0, 128)), 128, 128, screenW + 10, screenH + 10, 6, 16, True)
+meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 10, random.choice((-256, -128, 0, 128)), 128, 128, -138, screenH + 10, 6, 16, True)
 
 # MAIN LOOP
 run = True
@@ -215,6 +237,7 @@ while run:
     if menu_state == "play":
         drawGame()
 
+        # SCORE CODE
         if counter_started:  # Check if the counter has started
             counter += 1  # Increment the counter by 1 each frame
             score = counter // fps  # Calculate the score based on frames per second
@@ -224,7 +247,11 @@ while run:
             highest_score = score
             score_file.write(str(highest_score))  # score devine highscore
 
-        if check_collision(player, bird_L1) or check_collision(player, airplane_R1) or check_collision(player, meteor_L1):
+        # COLLISION CODE
+        if (check_collision(player, bird_L1)
+            or check_collision(player, airplane_R1)
+            or check_collision(player, meteor_L1)
+            or check_collision(player, meteor_R1)):
             menu_state = "game over"
         if bg_y >= 0:
             menu_state = "game over"
