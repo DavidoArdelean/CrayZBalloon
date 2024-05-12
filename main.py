@@ -1,10 +1,13 @@
-'''
-cauta alta forma pentru delay intre objects in loc de screenW * .. bravo ba, ai gasit cu bg_y claps*
-fa balonul mai mic
-deseneaza enemies: nori de plaie, vrajitoare pe matura
+"""
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
 fa omul sa mearga in balon si sa deseneze balonul si celelalte abea dupa ce omul ajunge la y(x)
-'''
+fa full screen sa arate ok
+fa end game sa felicite jucatorul
+fa sa dureze cateva secunde la extraterestru cu ceva interesant
+fa muzica
+fa sunete la fiecare enemy si fiecare miscare
+
+"""
 
 import pygame
 import classes
@@ -23,21 +26,21 @@ class Balloon:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 4
+        self.vel = 4.5
         self.up = False
         self.down = False
         self.left = False
         self.right = False
         self.sprite_index = False
-        self.mask = pygame.mask.from_surface(sb[0])  # mask din sb index 0 (primul sprite)
+        self.mask = pygame.mask.from_surface(bf[0])  # mask din sb index 0 (primul sprite)
 
     def draw(self, onscreen):
         self.sprite_index = not self.sprite_index  # la fiecare loop sprite index se schimba intre 0 si 1 (true-false)
-        current_sprite = sb[self.sprite_index]  # Get the current sprite based on sprite_index
+        current_sprite = bf[self.sprite_index]  # Get the current sprite based on sprite_index
         onscreen.blit(current_sprite, (self.x, self.y))  # Blit the sprite to the screen
 
     def update_mask(self):
-        self.mask = pygame.mask.from_surface(sb[self.sprite_index])  # update la balloon mask dupa index
+        self.mask = pygame.mask.from_surface(bf[self.sprite_index])  # update la balloon mask dupa index
 
 
 class Enemy:
@@ -60,11 +63,29 @@ class Enemy:
                    pygame.image.load('Assets/meteor/ML4.png'), pygame.image.load('Assets/meteor/ML5.png'),
                    pygame.image.load('Assets/meteor/ML6.png'), pygame.image.load('Assets/meteor/ML7.png')]
     meteor_right = [pygame.image.load('Assets/meteor/MR0.png'), pygame.image.load('Assets/meteor/MR1.png'),
-                   pygame.image.load('Assets/meteor/MR2.png'), pygame.image.load('Assets/meteor/MR3.png'),
-                   pygame.image.load('Assets/meteor/MR4.png'), pygame.image.load('Assets/meteor/MR5.png'),
-                   pygame.image.load('Assets/meteor/MR6.png'), pygame.image.load('Assets/meteor/MR7.png')]
+                    pygame.image.load('Assets/meteor/MR2.png'), pygame.image.load('Assets/meteor/MR3.png'),
+                    pygame.image.load('Assets/meteor/MR4.png'), pygame.image.load('Assets/meteor/MR5.png'),
+                    pygame.image.load('Assets/meteor/MR6.png'), pygame.image.load('Assets/meteor/MR7.png')]
+    cloud_left = [pygame.image.load('Assets/cloud/CL00.png'), pygame.image.load('Assets/cloud/CL01.png'),
+                  pygame.image.load('Assets/cloud/CL02.png'), pygame.image.load('Assets/cloud/CL03.png'),
+                  pygame.image.load('Assets/cloud/CL04.png'), pygame.image.load('Assets/cloud/CL05.png'),
+                  pygame.image.load('Assets/cloud/CL06.png'), pygame.image.load('Assets/cloud/CL07.png'),
+                  pygame.image.load('Assets/cloud/CL08.png'), pygame.image.load('Assets/cloud/CL09.png')]
+    cloud_right = [pygame.image.load('Assets/cloud/CR00.png'), pygame.image.load('Assets/cloud/CR01.png'),
+                   pygame.image.load('Assets/cloud/CR02.png'), pygame.image.load('Assets/cloud/CR03.png'),
+                   pygame.image.load('Assets/cloud/CR04.png'), pygame.image.load('Assets/cloud/CR05.png'),
+                   pygame.image.load('Assets/cloud/CR06.png'), pygame.image.load('Assets/cloud/CR07.png'),
+                   pygame.image.load('Assets/cloud/CR08.png'), pygame.image.load('Assets/cloud/CR09.png')]
+    witch_left = [pygame.image.load('Assets/witch/WL0.png'), pygame.image.load('Assets/witch/WL1.png'),
+                  pygame.image.load('Assets/witch/WL2.png'), pygame.image.load('Assets/witch/WL3.png'),
+                  pygame.image.load('Assets/witch/WL4.png'), pygame.image.load('Assets/witch/WL5.png'),
+                  pygame.image.load('Assets/witch/WL6.png'), pygame.image.load('Assets/witch/WL7.png')]
+    witch_right = [pygame.image.load('Assets/witch/WR0.png'), pygame.image.load('Assets/witch/WR1.png'),
+                   pygame.image.load('Assets/witch/WR2.png'), pygame.image.load('Assets/witch/WR3.png'),
+                   pygame.image.load('Assets/witch/WR4.png'), pygame.image.load('Assets/witch/WR5.png'),
+                   pygame.image.load('Assets/witch/WR6.png'), pygame.image.load('Assets/witch/WR7.png')]
 
-    def __init__(self, enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, meteor_enemy):
+    def __init__(self, enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, spawn_place, meteor_enemy):
         self.enemy_type = enemy_type
         self.side = side  # true-> _left, false-> _right
         self.x = x
@@ -79,45 +100,46 @@ class Enemy:
         self.moveCount = 0
         self.sprite_iteration = sprite_iteration
         self.meteor_enemy = meteor_enemy
+        self.spawn_place = spawn_place
         self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
 
     def draw(self, surface):
-        self.move()
-        if self.moveCount + 1 >= self.sprite_iteration:
-            self.moveCount = 0
-        if self.side:  #daca enemy e in dreapta, DRAW in stanga
-            if self.x >= -self.width - 10:
-                surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
-                self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu enemy_left
-                self.moveCount += 1
-        else:
-            if self.x <= self.x_end:
-                surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
-                self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
-                self.moveCount += 1
+        if bg_y > self.spawn_place:
+            self.move()
+            if self.moveCount + 1 >= self.sprite_iteration:
+                self.moveCount = 0
+            if self.side:  #daca enemy e in dreapta, DRAW in stanga
+                if self.x >= -self.width - 10:
+                    surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
+                    self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # punem mask pe aceleasi coordonate cu enemy_left
+                    self.moveCount += 1
+            else:
+                if self.x <= self.x_end:
+                    surface.blit(self.enemy_type[self.moveCount // 2], (self.x, self.y))
+                    self.mask = pygame.mask.from_surface(self.enemy_type[self.moveCount // 2])  # Update mask
+                    self.moveCount += 1
 
     def move(self):
-        if bg_y > -8000:
-            if self.meteor_enemy:  # daca enemy este meteorit, trebuie sa mearga pe diagonala
-                if self.side:  # daca enemy e in dreapta, MOVE in stanga
-                    if self.x_end - self.vel < self.x_path[0]:
-                        self.x -= self.vel
-                    if self.y <= self.y_path[1]:  # identic cu cea de jos pt ca balonul merge tot pe axa Y in jos
-                        self.y += self.vel
+        if self.meteor_enemy:  # daca enemy este meteorit, trebuie sa mearga pe diagonala
+            if self.side:  # daca enemy e in dreapta, MOVE in stanga
+                if self.x_end - self.vel < self.x_path[0]:
+                    self.x -= self.vel
+                if self.y <= self.y_path[1]:  # identic cu cea de jos pt ca balonul merge tot pe axa Y in jos
+                    self.y += self.vel
 
-                else:  # daca enemy e in stanga, MOVE in dreapta
-                    if self.x <= self.x_path[1]:
-                        self.x += self.vel
-                    if self.y <= self.y_path[1]:  # identic cu cea de sus
-                        self.y += self.vel
-            else:
-                if self.side:  # daca enemy e in dreapta, MOVE in stanga
-                    if self.x_end - self.vel < self.x_path[0]:
-                        self.x -= self.vel
+            else:  # daca enemy e in stanga, MOVE in dreapta
+                if self.x <= self.x_path[1]:
+                    self.x += self.vel
+                if self.y <= self.y_path[1]:  # identic cu cea de sus
+                    self.y += self.vel
+        else:
+            if self.side:  # daca enemy e in dreapta, MOVE in stanga
+                if self.x_end - self.vel < self.x_path[0]:
+                    self.x -= self.vel
 
-                else:  # daca enemy e in stanga, MOVE in dreapta
-                    if self.x <= self.x_path[1]:
-                        self.x += self.vel
+            else:  # daca enemy e in stanga, MOVE in dreapta
+                if self.x <= self.x_path[1]:
+                    self.x += self.vel
 
 
 def drawGame():
@@ -128,12 +150,26 @@ def drawGame():
     screen.blit(bg, (0, bg_y))
 
     player.draw(screen)
+
     bird_L1.draw(screen)
+    bird_R1.draw(screen)
+
+    airplane_L1.draw(screen)
     airplane_R1.draw(screen)
+
     meteor_L1.draw(screen)
     meteor_R1.draw(screen)
 
+    cloud_L1.draw(screen)
+    cloud_R1.draw(screen)
+
+    witch_L1.draw(screen)
+    witch_R1.draw(screen)
     pygame.display.update()
+
+
+def walk_motion():
+    pass
 
 
 def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiecte
@@ -144,30 +180,60 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 
 def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     global bg_y
-    global bird_L1
-    global airplane_R1
     global counter_started
+
+    global bird_L1
+    global bird_R1
+
+    global airplane_L1
+    global airplane_R1
+
     global meteor_L1
     global meteor_R1
+
+    global cloud_L1
+    global cloud_R1
+
+    global witch_L1
+    global witch_R1
+
     counter_started = False
     bg_y = -8688
-    player.x = screenW // 2 - sb[0].get_width() / 2
-    player.y = screenH - sb[0].get_height()
+    player.x = screenW // 2 - bf[0].get_width() / 2
+    player.y = screenH - bf[0].get_height()
 
-    # def __init__(self, enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, meteor_enemy):
-    bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, screenH + 10, 3.2, 12, False)
-    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, screenH + 10, 4, 12, False)
-    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-256, -128, 0, 128)), 128, 128, screenW + 10, screenH + 10, 6, 16, True)
-    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 10, random.choice((-256, -128, 0, 128)), 128, 128, -138, screenH + 10, 6, 16, True)
+    bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12,
+                    -8700, False)
+    bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -74, screenH, 4, 12,
+                    -8600, False)
 
+    airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW,
+                        screenH, 4, 12, -8500, False)
+    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH,
+                        4, 12, -8400, False)
+
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-256, -128, 0, 128)), 128, 128, screenW, screenH,
+                      6, 16, -8200, True)
+    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-256, -128, 0, 128)), 128, 128, -128, screenH, 6,
+                      16, -8000, True)
+
+    cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5,
+                     20, -7900, False)
+    cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5,
+                     20, -7800, False)
+
+    witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5,
+                     12, -7700, False)
+    witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5,
+                     12, -7600, False)
 
 #variables from game images
 pygame.display.set_caption("CrayZ Balloon")
-walk = [pygame.image.load('walk0.png'), pygame.image.load('walk1.png'), pygame.image.load('walk2.png'),
-        pygame.image.load('walk3.png'), pygame.image.load('walk4.png'), pygame.image.load('walk5.png'),
-        pygame.image.load('walk6.png'), pygame.image.load('walk7.png')]
+walk = [pygame.image.load('Assets/human/H0.png'), pygame.image.load('Assets/human/H1.png'), pygame.image.load('Assets/human/H2.png'),
+        pygame.image.load('Assets/human/H3.png'), pygame.image.load('Assets/human/H4.png'), pygame.image.load('Assets/human/H5.png'),
+        pygame.image.load('Assets/human/H6.png'), pygame.image.load('Assets/human/H7.png')]
 bg = pygame.image.load("bg.png")
-sb = [pygame.image.load('SB0.png'), pygame.image.load('SB1.png')]
+bf = [pygame.image.load('Assets/BalloonFlying/BF0.png'), pygame.image.load('Assets/BalloonFlying/BF1.png')]
 b_start = pygame.image.load('Assets/menu/b_start.png')
 b_highscore = pygame.image.load('Assets/menu/b_highscore.png')
 b_quit = pygame.image.load('Assets/menu/b_quit.png')
@@ -179,7 +245,7 @@ b_main = pygame.image.load('Assets/menu/b_main.png')
 screenW = 512
 screenH = 512
 screen = pygame.display.set_mode((screenW, screenH))
-surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)
+surface = pygame.Surface((screenW, screenH), pygame.SRCALPHA)  # face un rectangle semi transparent
 
 #game variables
 menu_state = "main"
@@ -211,11 +277,25 @@ back_button = classes.Button(screenW / 2 - 125, 390, b_back, 0.5)
 main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 # INSTANCES of classes
-player = Balloon(screenW // 2 - sb[0].get_width() / 2, screenH - sb[0].get_height(), 128, 185)
-bird_L1 = Enemy(Enemy.bird_right, False, -64 - 10, random.choice((100, 200, 300, 400)), 64, 64, screenW + 10, screenH + 10, 3.2, 12, False)
-airplane_R1 = Enemy(Enemy.airplane_left, True, screenW * 2 + 10, random.choice((100, 200, 300, 400)), 220, 92, -230, screenH + 10, 4, 12, False)
-meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((0, 128)), 128, 128, screenW + 10, screenH + 10, 6, 16, True)
-meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 10, random.choice((-256, -128, 0, 128)), 128, 128, -138, screenH + 10, 6, 16, True)
+player = Balloon(screenW // 2 - bf[0].get_width() / 2, screenH - bf[0].get_height(), 128, 185)
+
+# pune aici, pune in reset, pune in draw method + global variable, pune collision
+# enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, spawn_place, meteor_enemy
+bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12, -8700, False)
+bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -74, screenH, 4, 12, -8600, False)
+
+airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW, screenH, 4, 12, -8500, False)
+airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH, 4, 12, -8400, False)
+
+meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-256, -128, 0, 128)), 128, 128, screenW, screenH, 6, 16, -8200, True)
+meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-256, -128, 0, 128)), 128, 128, -128, screenH, 6, 16, -8000, True)
+
+cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 20, -7900, False)
+cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 20, -7800, False)
+
+witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 12, -7700, False)
+witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 12, -7600, False)
+
 
 # MAIN LOOP
 run = True
@@ -224,7 +304,7 @@ while run:
 
     # check menu state
     if menu_state == "main":
-        reset_game() # resetam variables cand suntem in main
+        reset_game()  # resetam variables cand suntem in main
         screen.fill((52, 50, 150))
         if start_button.draw(screen):
             menu_state = "play"
@@ -250,9 +330,19 @@ while run:
 
         # COLLISION CODE
         if (check_collision(player, bird_L1)
+            or check_collision(player, bird_R1)
+
+            or check_collision(player, airplane_L1)
             or check_collision(player, airplane_R1)
+
             or check_collision(player, meteor_L1)
-            or check_collision(player, meteor_R1)):
+            or check_collision(player, meteor_R1)
+
+            or check_collision(player, cloud_L1)
+            or check_collision(player, cloud_R1)
+
+            or check_collision(player, witch_L1)
+            or check_collision(player, witch_R1)):
             menu_state = "game over"
         if bg_y >= 0:
             menu_state = "game over"
@@ -345,7 +435,6 @@ while run:
                     menu_state = "pause"
                 elif menu_state == "pause":
                     menu_state = "play"
-
         if event.type == pygame.QUIT:
             run = False
 
