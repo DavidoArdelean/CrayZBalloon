@@ -2,17 +2,40 @@
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
 fa omul sa mearga in balon si sa deseneze balonul si celelalte abea dupa ce omul ajunge la y(x)
 fa full screen sa arate ok
-fa end game sa felicite jucatorul
-fa sa dureze cateva secunde la extraterestru cu ceva interesant
+La final extraterestrul mananca balonul apoi vine inspre ecran cu o mica curba si te pupa apoi congrats
 fa muzica
 fa sunete la fiecare enemy si fiecare miscare
-
 """
 
 import pygame
 import classes
 import random
 pygame.init()
+
+class human_walk:
+    walk = [pygame.image.load('Assets/human/H0.png'), pygame.image.load('Assets/human/H1.png'),
+            pygame.image.load('Assets/human/H2.png'), pygame.image.load('Assets/human/H3.png'),
+            pygame.image.load('Assets/human/H4.png'), pygame.image.load('Assets/human/H5.png'),
+            pygame.image.load('Assets/human/H6.png'), pygame.image.load('Assets/human/H7.png')]
+
+    def __init__(self, x, y, x_end, vel):
+        self.x = x
+        self.y = y
+        self.x_end = x_end
+        self.vel = vel
+        self.move_count = 0
+
+    def draw(self, surface):
+        self.move()
+        if self.move_count + 1 >= 12:
+            self.move_count = 0
+        if self.x <= self.x_end:
+            surface.blit(self.walk[self.move_count // 2], (self.x, self.y))
+            self.move_count += 1
+
+    def move(self):
+        if self.x <= self.x_end:
+            self.x += self.vel
 
 
 def draw_text(text, font, text_col, x, y):  #functie care scrie un text pe screen si ia parametrii (text, fontul, culoare, pozitii x y)
@@ -150,6 +173,7 @@ def drawGame():
     screen.blit(bg, (0, bg_y))
 
     player.draw(screen)
+    human.draw(screen)
 
     bird_L1.draw(screen)
     bird_R1.draw(screen)
@@ -165,12 +189,8 @@ def drawGame():
 
     witch_L1.draw(screen)
     witch_R1.draw(screen)
+
     pygame.display.update()
-
-
-def walk_motion():
-    pass
-
 
 def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiecte
     offset_x = obj2.x - obj1.x  # verifica decalaj intre xul obj2 si xul obj1
@@ -228,10 +248,7 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
                      12, -7600, False)
 
 #variables from game images
-pygame.display.set_caption("CrayZ Balloon")
-walk = [pygame.image.load('Assets/human/H0.png'), pygame.image.load('Assets/human/H1.png'), pygame.image.load('Assets/human/H2.png'),
-        pygame.image.load('Assets/human/H3.png'), pygame.image.load('Assets/human/H4.png'), pygame.image.load('Assets/human/H5.png'),
-        pygame.image.load('Assets/human/H6.png'), pygame.image.load('Assets/human/H7.png')]
+pygame.display.set_caption("Cray-Z Balloon")
 bg = pygame.image.load("bg.png")
 bf = [pygame.image.load('Assets/BalloonFlying/BF0.png'), pygame.image.load('Assets/BalloonFlying/BF1.png')]
 b_start = pygame.image.load('Assets/menu/b_start.png')
@@ -278,6 +295,7 @@ main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - bf[0].get_width() / 2, screenH - bf[0].get_height(), 128, 185)
+human = human_walk(10, 448, 225, 3)
 
 # pune aici, pune in reset, pune in draw method + global variable, pune collision
 # enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, spawn_place, meteor_enemy
