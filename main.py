@@ -17,20 +17,27 @@ class human_walk:
             pygame.image.load('Assets/human/H2.png'), pygame.image.load('Assets/human/H3.png'),
             pygame.image.load('Assets/human/H4.png'), pygame.image.load('Assets/human/H5.png'),
             pygame.image.load('Assets/human/H6.png'), pygame.image.load('Assets/human/H7.png')]
+    balloon = [pygame.image.load('Assets/Balloon/B0.png'), pygame.image.load('Assets/Balloon/B1.png')]
 
     def __init__(self, x, y, x_end, vel):
         self.x = x
         self.y = y
         self.x_end = x_end
         self.vel = vel
-        self.move_count = 0
+        self.move_count = 0  # pentru a itera in walk sprite list
+        self.balloon_iter = False  # pentru a itera in balloon sprite list
 
     def draw(self, surface):
         self.move()
         if self.move_count + 1 >= 12:
             self.move_count = 0
+
         if self.x <= self.x_end:
-            surface.blit(self.walk[self.move_count // 2], (self.x, self.y))
+            surface.blit(bg, (0, bg_y))  # intai printam bg
+            surface.blit(self.walk[self.move_count // 2], (self.x, self.y))  # apoi printam walk
+            self.balloon_iter = not self.balloon_iter  # la fiecare loop sprite index se schimba intre 0 si 1 (true-false)
+            current_sprite = self.balloon[self.balloon_iter]  # Get the current sprite based on sprite_index
+            surface.blit(current_sprite, (player.x, player.y))  # Blit the sprite to the screen
             self.move_count += 1
 
     def move(self):
@@ -166,31 +173,34 @@ class Enemy:
 
 
 def drawGame():
-    global bg_y
-    bg_y += 3
-    if bg_y < bg.get_height() * -1:
-        bg_y = bg.get_height()
-    screen.blit(bg, (0, bg_y))
+    if human.x < 225:
+        human.draw(screen)
+    else:
+        global bg_y
+        bg_y += 3
+        if bg_y < bg.get_height() * -1:
+            bg_y = bg.get_height()
+        screen.blit(bg, (0, bg_y))
 
-    player.draw(screen)
-    human.draw(screen)
+        player.draw(screen)
 
-    bird_L1.draw(screen)
-    bird_R1.draw(screen)
+        bird_L1.draw(screen)
+        bird_R1.draw(screen)
 
-    airplane_L1.draw(screen)
-    airplane_R1.draw(screen)
+        airplane_L1.draw(screen)
+        airplane_R1.draw(screen)
 
-    meteor_L1.draw(screen)
-    meteor_R1.draw(screen)
+        meteor_L1.draw(screen)
+        meteor_R1.draw(screen)
 
-    cloud_L1.draw(screen)
-    cloud_R1.draw(screen)
+        cloud_L1.draw(screen)
+        cloud_R1.draw(screen)
 
-    witch_L1.draw(screen)
-    witch_R1.draw(screen)
+        witch_L1.draw(screen)
+        witch_R1.draw(screen)
 
-    pygame.display.update()
+        pygame.display.update()
+
 
 def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiecte
     offset_x = obj2.x - obj1.x  # verifica decalaj intre xul obj2 si xul obj1
@@ -201,6 +211,7 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     global bg_y
     global counter_started
+    global human
 
     global bird_L1
     global bird_R1
@@ -221,6 +232,7 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     bg_y = -8688
     player.x = screenW // 2 - bf[0].get_width() / 2
     player.y = screenH - bf[0].get_height()
+    human.x = 10
 
     bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12,
                     -8700, False)
@@ -232,9 +244,9 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH,
                         4, 12, -8400, False)
 
-    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-256, -128, 0, 128)), 128, 128, screenW, screenH,
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-350, -256, 0, 180)), 128, 128, screenW, screenH,
                       6, 16, -8200, True)
-    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-256, -128, 0, 128)), 128, 128, -128, screenH, 6,
+    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-350, -256, 0, 180)), 128, 128, -128, screenH, 6,
                       16, -8000, True)
 
     cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5,
@@ -305,8 +317,8 @@ bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 40
 airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW, screenH, 4, 12, -8500, False)
 airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH, 4, 12, -8400, False)
 
-meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-256, -128, 0, 128)), 128, 128, screenW, screenH, 6, 16, -8200, True)
-meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-256, -128, 0, 128)), 128, 128, -128, screenH, 6, 16, -8000, True)
+meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-350, -256, 0, 180)), 128, 128, screenW, screenH, 6, 16, -8200, True)
+meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-350, -256, 0, 180)), 128, 128, -128, screenH, 6, 16, -8000, True)
 
 cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 20, -7900, False)
 cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 20, -7800, False)
@@ -367,52 +379,53 @@ while run:
 
         # VERIFICA UP DOWN LEFT RIGHT, UP+LEFT+RIGHT ETC
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP] and player.y > player.vel:
-            if keys[pygame.K_LEFT] and player.y > player.vel and player.x > player.vel:
-                player.y -= player.vel
-                player.x -= player.vel / 2
-                player.up = True
-                player.down = False
+        if human.x >= 225:  # miscam balonul doar daca human ajunge la el
+            if keys[pygame.K_UP] and player.y > player.vel:
+                if keys[pygame.K_LEFT] and player.y > player.vel and player.x > player.vel:
+                    player.y -= player.vel
+                    player.x -= player.vel / 2
+                    player.up = True
+                    player.down = False
+                    player.left = True
+                    player.right = False
+                elif keys[pygame.K_RIGHT] and player.y > player.vel and player.x < screenW - player.width - player.vel:
+                    player.y -= player.vel
+                    player.x += player.vel / 2
+                    player.up = True
+                    player.down = False
+                    player.left = False
+                    player.right = True
+                else:
+                    player.y -= player.vel
+                    player.up = True
+                    player.down = False
+            elif keys[pygame.K_DOWN] and player.y < screenH - player.height - player.vel:
+                if keys[pygame.K_LEFT] and player.y < screenH - player.height - player.vel and player.x > player.vel:
+                    player.y += player.vel
+                    player.x -= player.vel / 2
+                    player.up = False
+                    player.down = True
+                    player.left = True
+                    player.right = False
+                elif keys[pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
+                    player.y += player.vel
+                    player.x += player.vel / 2
+                    player.up = False
+                    player.down = True
+                    player.left = False
+                    player.right = True
+                else:
+                    player.y += player.vel
+                    player.up = False
+                    player.down = True
+            if keys[pygame.K_LEFT] and player.x > player.vel:
+                player.x -= player.vel
                 player.left = True
                 player.right = False
-            elif keys[pygame.K_RIGHT] and player.y > player.vel and player.x < screenW - player.width - player.vel:
-                player.y -= player.vel
-                player.x += player.vel / 2
-                player.up = True
-                player.down = False
+            elif keys[pygame.K_RIGHT] and player.x < screenW - player.width - player.vel:
+                player.x += player.vel
                 player.left = False
                 player.right = True
-            else:
-                player.y -= player.vel
-                player.up = True
-                player.down = False
-        elif keys[pygame.K_DOWN] and player.y < screenH - player.height - player.vel:
-            if keys[pygame.K_LEFT] and player.y < screenH - player.height - player.vel and player.x > player.vel:
-                player.y += player.vel
-                player.x -= player.vel / 2
-                player.up = False
-                player.down = True
-                player.left = True
-                player.right = False
-            elif keys[pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
-                player.y += player.vel
-                player.x += player.vel / 2
-                player.up = False
-                player.down = True
-                player.left = False
-                player.right = True
-            else:
-                player.y += player.vel
-                player.up = False
-                player.down = True
-        if keys[pygame.K_LEFT] and player.x > player.vel:
-            player.x -= player.vel
-            player.left = True
-            player.right = False
-        elif keys[pygame.K_RIGHT] and player.x < screenW - player.width - player.vel:
-            player.x += player.vel
-            player.left = False
-            player.right = True
 
     if menu_state == "pause":  #arata butoanele de pause screen
         pygame.draw.rect(surface, (128, 128, 128, 5), [0, 0, screenW, screenH])
