@@ -1,7 +1,6 @@
 """
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
 fa full screen sa arate ok
-La final extraterestrul mananca balonul apoi vine inspre ecran cu o mica curba si te pupa apoi congrats
 fa muzica, sunete la fiecare enemy si fiecare miscare
 aranjeaza enemies fara randomize
 """
@@ -10,6 +9,53 @@ import pygame
 import classes
 import random
 pygame.init()
+
+alien_sprites = [pygame.image.load('Assets/alien/Final00.png'), pygame.image.load('Assets/alien/Final01.png'),
+                 pygame.image.load('Assets/alien/Final02.png'), pygame.image.load('Assets/alien/Final03.png'),
+                 pygame.image.load('Assets/alien/Final04.png'), pygame.image.load('Assets/alien/Final05.png'),
+                 pygame.image.load('Assets/alien/Final06.png'), pygame.image.load('Assets/alien/Final07.png'),
+                 pygame.image.load('Assets/alien/Final08.png'), pygame.image.load('Assets/alien/Final09.png'),
+                 pygame.image.load('Assets/alien/Final10.png'), pygame.image.load('Assets/alien/Final11.png'),
+                 pygame.image.load('Assets/alien/Final12.png'), pygame.image.load('Assets/alien/Final13.png'),
+                 pygame.image.load('Assets/alien/Final14.png'), pygame.image.load('Assets/alien/Final15.png'),
+                 pygame.image.load('Assets/alien/Final16.png'), pygame.image.load('Assets/alien/Final17.png'),
+                 pygame.image.load('Assets/alien/Final18.png'), pygame.image.load('Assets/alien/Final19.png'),
+                 pygame.image.load('Assets/alien/Final20.png'), pygame.image.load('Assets/alien/Final21.png'),
+                 pygame.image.load('Assets/alien/Final22.png'), pygame.image.load('Assets/alien/Final23.png'),
+                 pygame.image.load('Assets/alien/Final24.png'), pygame.image.load('Assets/alien/Final25.png'),
+                 pygame.image.load('Assets/alien/Final26.png'), pygame.image.load('Assets/alien/Final27.png'),
+                 pygame.image.load('Assets/alien/Final28.png'), pygame.image.load('Assets/alien/Final29.png'),
+                 pygame.image.load('Assets/alien/Final30.png'), pygame.image.load('Assets/alien/Final31.png'),
+                 pygame.image.load('Assets/alien/Final32.png'), pygame.image.load('Assets/alien/Final33.png'),
+                 pygame.image.load('Assets/alien/Final34.png'), pygame.image.load('Assets/alien/Final35.png'),
+                 pygame.image.load('Assets/alien/Final36.png'), pygame.image.load('Assets/alien/Final37.png'),
+                 pygame.image.load('Assets/alien/Final38.png'), pygame.image.load('Assets/alien/Final39.png'),
+                 pygame.image.load('Assets/alien/Final40.png'), pygame.image.load('Assets/alien/Final41.png'),
+                 pygame.image.load('Assets/alien/Final42.png'), pygame.image.load('Assets/alien/Final43.png'),
+                 pygame.image.load('Assets/alien/Final44.png'), pygame.image.load('Assets/alien/Final45.png'),
+                 pygame.image.load('Assets/alien/Final46.png'), pygame.image.load('Assets/alien/Final47.png'),
+                 pygame.image.load('Assets/alien/Final48.png'), pygame.image.load('Assets/alien/Final49.png'),
+                 pygame.image.load('Assets/alien/Final50.png'), pygame.image.load('Assets/alien/Final51.png'),
+                 pygame.image.load('Assets/alien/Final52.png'), pygame.image.load('Assets/alien/Final53.png'),
+                 pygame.image.load('Assets/alien/Final54.png'), pygame.image.load('Assets/alien/Final55.png'),
+                 pygame.image.load('Assets/alien/Final56.png'), pygame.image.load('Assets/alien/Final57.png'),
+                 pygame.image.load('Assets/alien/Final58.png'), pygame.image.load('Assets/alien/Final59.png'),
+                 pygame.image.load('Assets/alien/Final60.png'), pygame.image.load('Assets/alien/Final61.png'),
+                 pygame.image.load('Assets/alien/Final62.png'), pygame.image.load('Assets/alien/Final63.png'),
+                 pygame.image.load('Assets/alien/Final64.png'), pygame.image.load('Assets/alien/Final65.png'),
+                 pygame.image.load('Assets/alien/Final66.png'), pygame.image.load('Assets/alien/Final67.png'),
+                 pygame.image.load('Assets/alien/Final68.png'), pygame.image.load('Assets/alien/Final69.png'),
+                 pygame.image.load('Assets/alien/Final70.png'), pygame.image.load('Assets/alien/Final71.png'),
+                 pygame.image.load('Assets/alien/Final72.png'), pygame.image.load('Assets/alien/Final73.png'),
+                 pygame.image.load('Assets/alien/Final74.png'), pygame.image.load('Assets/alien/Final75.png'),
+                 pygame.image.load('Assets/alien/Final76.png'), pygame.image.load('Assets/alien/Final77.png'),
+                 pygame.image.load('Assets/alien/Final78.png'), pygame.image.load('Assets/alien/Final79.png'),
+                 pygame.image.load('Assets/alien/Final80.png'), pygame.image.load('Assets/alien/Final81.png'),
+                 pygame.image.load('Assets/alien/Final82.png'), pygame.image.load('Assets/alien/Final83.png'),
+                 pygame.image.load('Assets/alien/Final84.png'), pygame.image.load('Assets/alien/Final85.png'),
+                 pygame.image.load('Assets/alien/Final86.png'), pygame.image.load('Assets/alien/Final87.png'),
+                 pygame.image.load('Assets/alien/Final88.png'), pygame.image.load('Assets/alien/Final89.png')]
+
 
 class human_walk:
     walk = [pygame.image.load('Assets/human/H0.png'), pygame.image.load('Assets/human/H1.png'),
@@ -55,7 +101,7 @@ class Balloon:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 4.5
+        self.vel = 5
         self.up = False
         self.down = False
         self.left = False
@@ -131,10 +177,12 @@ class Enemy:
         self.meteor_enemy = meteor_enemy
         self.spawn_place = spawn_place
         self.mask = pygame.mask.from_surface(self.enemy_type[0])  # mask la Enemy pe din bird_left index 0
+        self.bird_sound_trigger = False
 
     def draw(self, surface):
         if bg_y > self.spawn_place:
             self.move()
+            self.sounds()
             if self.moveCount + 1 >= self.sprite_iteration:
                 self.moveCount = 0
             if self.side:  #daca enemy e in dreapta, DRAW in stanga
@@ -170,6 +218,20 @@ class Enemy:
                 if self.x <= self.x_path[1]:
                     self.x += self.vel
 
+    def sounds(self):
+        if self.side and self.x == 500:
+            if self.enemy_type == Enemy.bird_left:
+                bird_sound.play()
+            elif self.enemy_type == Enemy.airplane_left:
+                airplane_sound.play()
+            elif self.enemy_type == Enemy.cloud_left:
+                cloud_sound.play()
+            elif self.enemy_type == Enemy.witch_left:
+                meteor_sound.play()
+
+        elif self.meteor_enemy and self.y == 10:
+            meteor_sound.play()
+
 
 def drawGame():
     if human.x < 225:
@@ -180,8 +242,8 @@ def drawGame():
         if bg_y < bg.get_height() * -1:
             bg_y = bg.get_height()
         screen.blit(bg, (0, bg_y))
-
-        player.draw(screen)
+        if bg_y <= 0:
+            player.draw(screen)
 
         bird_L1.draw(screen)
         bird_R1.draw(screen)
@@ -211,6 +273,7 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     global bg_y
     global counter_started
     global human
+    global alien_count
 
     global bird_L1
     global bird_R1
@@ -232,6 +295,7 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     player.x = screenW // 2 - bf[0].get_width() / 2
     player.y = screenH - bf[0].get_height()
     human.x = 10
+    alien_count = 0
 
     bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12,
                     -8700, False)
@@ -258,6 +322,24 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5,
                      12, -7600, False)
 
+
+# SOUNDS and MUSIC VARIABLES
+bird_sound = pygame.mixer.Sound('sounds/birds1.wav')
+airplane_sound = pygame.mixer.Sound('sounds/plane1.wav')
+cloud_sound = pygame.mixer.Sound('sounds/cloud1.wav')
+meteor_sound = pygame.mixer.Sound('sounds/meteor1.wav')
+witch_sound = pygame.mixer.Sound('sounds/witch2.wav')
+walk_sound = pygame.mixer.Sound('sounds/steps1.wav')
+
+game_music1 = pygame.mixer.Sound('sounds/menusong1.mp3')
+game_music2 = pygame.mixer.Sound('sounds/menusong2.mp3')
+game_music3 = pygame.mixer.Sound('sounds/song1.mp3')
+game_music4 = pygame.mixer.Sound('sounds/song2.mp3')
+game_music = [game_music1, game_music2, game_music3, game_music4]
+
+#fa game_music o singura melodie legata din 4 si day play doar la asta la infinit
+game_music.play(-1)
+
 #variables from game images
 pygame.display.set_caption("Cray-Z Balloon")
 bg = pygame.image.load("bg.png")
@@ -280,6 +362,7 @@ menu_state = "main"
 bg_y = -8688
 fps = 30
 clock = pygame.time.Clock()  # Create a clock object to control the frame rate
+alien_count = 0
 
 #score variables
 counter = 0
@@ -325,7 +408,6 @@ cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 
 witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 12, -7700, False)
 witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 12, -7600, False)
 
-
 # MAIN LOOP
 run = True
 while run:
@@ -336,6 +418,7 @@ while run:
         reset_game()  # resetam variables cand suntem in main
         screen.fill((52, 50, 150))
         if start_button.draw(screen):
+            walk_sound.play()
             menu_state = "play"
             counter = 0  # Reset counter when starting gameplay
             counter_started = True
@@ -373,8 +456,13 @@ while run:
             or check_collision(player, witch_L1)
             or check_collision(player, witch_R1)):
             menu_state = "game over"
+
         if bg_y >= 0:
-            menu_state = "game over"
+            if alien_count <= 89: # afisam animatia de final
+                screen.blit(alien_sprites[alien_count], (0, 0))
+                alien_count += 1
+            else:
+                menu_state = "game over"
 
         # VERIFICA UP DOWN LEFT RIGHT, UP+LEFT+RIGHT ETC
         keys = pygame.key.get_pressed()
@@ -441,7 +529,7 @@ while run:
         with open("scores.txt", "r") as score_file:
             draw_text("Highscore: " + str(score_file.read()), font, TEXT_COL, 180, screenH / 2 - 10)
 
-        if back_button.draw(screen):  # arata back button
+        if back_button.draw(screen):  # + arata back button
             menu_state = "main"
 
     if menu_state == "game over":
