@@ -1,10 +1,9 @@
 """
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
-fa omul sa mearga in balon si sa deseneze balonul si celelalte abea dupa ce omul ajunge la y(x)
 fa full screen sa arate ok
 La final extraterestrul mananca balonul apoi vine inspre ecran cu o mica curba si te pupa apoi congrats
-fa muzica
-fa sunete la fiecare enemy si fiecare miscare
+fa muzica, sunete la fiecare enemy si fiecare miscare
+aranjeaza enemies fara randomize
 """
 
 import pygame
@@ -307,7 +306,7 @@ main_button = classes.Button(screenW / 2 - 125, 390, b_main, 0.5)
 
 # INSTANCES of classes
 player = Balloon(screenW // 2 - bf[0].get_width() / 2, screenH - bf[0].get_height(), 128, 185)
-human = human_walk(10, 448, 225, 3)
+human = human_walk(10, 448, 225, 3.5)
 
 # pune aici, pune in reset, pune in draw method + global variable, pune collision
 # enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, spawn_place, meteor_enemy
