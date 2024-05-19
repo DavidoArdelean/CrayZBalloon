@@ -1,10 +1,7 @@
 """
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
 fa full screen sa arate ok
-fa muzica, sunete la fiecare enemy si fiecare miscare
 aranjeaza enemies fara randomize
-schimba sunetu de cloud1 cauta in recycle bin pc
-fa sunetul la meteor ca nu e bun si nici la witch ????
 """
 
 import pygame
@@ -224,35 +221,35 @@ class Enemy:
         if self.side and self.x == 500:  # play sound daca vine din dreapta si X trece prin px 500
             if self.enemy_type == Enemy.bird_left:
                 bird_sound.play()
-            elif self.enemy_type == Enemy.airplane_left:
+            if self.enemy_type == Enemy.airplane_left:
                 airplane_sound.play()
-            elif self.enemy_type == Enemy.cloud_left:
+            if self.enemy_type == Enemy.cloud_left:
                 cloud_sound.play()
-            elif self.enemy_type == Enemy.witch_left:
+            if self.enemy_type == Enemy.witch_left:
                 witch_sound.play()
 
         if self.meteor_enemy:
-            if self.side and self.y == 10 and self.x == 500:  # daca vine din dr si trece prin px Y 10 si X 500
+            if self.side and self.y == 0 and self.x == screenW:  # daca vine din dr si trece prin px Y 0 si X screenW
                 meteor_sound.play()
-            if not self.side and self.y == 10 and self.x == -self.width + 20:  # daca vine din stg si trece prin px Y 10 si X-width+20
+            if not self.side and self.y == 0 and self.x == -128:  # daca vine din stg si trece prin px Y 0 si X-128
                 meteor_sound.play()
 
         if not self.side and self.x == -self.width + 20:  # play sound daca vine din stanga si X trece prin px -width+20
             if self.enemy_type == Enemy.bird_right:
                 bird_sound.play()
-            elif self.enemy_type == Enemy.airplane_right:
+            if self.enemy_type == Enemy.airplane_right:
                 airplane_sound.play()
-            elif self.enemy_type == Enemy.cloud_right:
+            if self.enemy_type == Enemy.cloud_right:
                 cloud_sound.play()
-            elif self.enemy_type == Enemy.witch_right:
+            if self.enemy_type == Enemy.witch_right:
                 witch_sound.play()
 
 
 def drawGame():
+    global bg_y
     if human.x < 225:
         human.draw(screen)
     else:
-        global bg_y
         if bg_y < 0:
             bg_y += 3
             if bg_y < bg.get_height() * -1:
@@ -312,9 +309,9 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     human.x = 10
     alien_count = 0
 
-    bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12,
+    bird_L1 = Enemy(Enemy.bird_right, False, -80, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12,
                     -8700, False)
-    bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -74, screenH, 4, 12,
+    bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -80, screenH, 4, 12,
                     -8600, False)
 
     airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW,
@@ -322,34 +319,38 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH,
                         4, 12, -8400, False)
 
-    meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-350, -256, 0, 180)), 128, 128, screenW, screenH,
-                      6, 16, -8200, True)
-    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-350, -256, 0, 180)), 128, 128, -128, screenH, 6,
-                      16, -8000, True)
+    # seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -8200, True)
+    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -8000, True)
 
     cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5,
                      20, -7900, False)
     cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5,
                      20, -7800, False)
 
-    witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5,
-                     12, -7700, False)
-    witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5,
-                     12, -7600, False)
+    witch_L1 = Enemy(Enemy.witch_right, False, -138, random.choice((100, 200, 300, 400)), 128, 128, screenW + 8,
+                     screenH, 5, 12, -7700, False)
+    witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, random.choice((100, 200, 300, 400)), 128, 138, -132, screenH,
+                     5, 12, -7400, False)
 
 
 # SOUNDS and MUSIC VARIABLES
 bird_sound = pygame.mixer.Sound('sounds/birds1.wav')
-bird_sound.set_volume(0.7)
+bird_sound.set_volume(0.6)
 airplane_sound = pygame.mixer.Sound('sounds/plane1.wav')
+airplane_sound.set_volume(0.9)
 cloud_sound = pygame.mixer.Sound('sounds/cloud1.wav')
 meteor_sound = pygame.mixer.Sound('sounds/meteor1.wav')
-witch_sound = pygame.mixer.Sound('sounds/witch2.wav')
+meteor_sound.set_volume(0.7)
+witch_sound = pygame.mixer.Sound('sounds/witch1.wav')
+witch_sound.set_volume(0.5)
 walk_sound = pygame.mixer.Sound('sounds/steps1.wav')
+walk_sound.set_volume(0.2)
 explosion_sound = pygame.mixer.Sound('sounds/explosion.wav')
+explosion_sound.set_volume(0.8)
 click_sound = pygame.mixer.Sound('sounds/click.wav')
 game_music = pygame.mixer.Sound('sounds/music.wav')
-game_music.set_volume(0.6)
+game_music.set_volume(0.4)
 game_music.play(-1)  # canta muzica la infinit
 
 #variables from game images
@@ -405,20 +406,22 @@ human = human_walk(10, 448, 225, 3.5)
 
 # pune aici, pune in reset, pune in draw method + global variable, pune collision
 # enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, spawn_place, meteor_enemy
-bird_L1 = Enemy(Enemy.bird_right, False, -64, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12, -8700, False)
-bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -74, screenH, 4, 12, -8600, False)
+
+bird_L1 = Enemy(Enemy.bird_right, False, -80, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12, -8700, False)
+bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -80, screenH, 4, 12, -8600, False)
 
 airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW, screenH, 4, 12, -8500, False)
 airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH, 4, 12, -8400, False)
 
-meteor_L1 = Enemy(Enemy.meteor_right, False, -128, random.choice((-350, -256, 0, 180)), 128, 128, screenW, screenH, 6, 16, -8200, True)
-meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-350, -256, 0, 180)), 128, 128, -128, screenH, 6, 16, -8000, True)
+#seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
+meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -8200, True)
+meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -8000, True)
 
 cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 20, -7900, False)
 cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 20, -7800, False)
 
-witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 128, 128, screenW, screenH, 5, 12, -7700, False)
-witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 128, 128, -100, screenH, 5, 12, -7600, False)
+witch_L1 = Enemy(Enemy.witch_right, False, -138, random.choice((100, 200, 300, 400)), 128, 128, screenW + 8, screenH, 5, 12, -7700, False)
+witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, random.choice((100, 200, 300, 400)), 128, 128, -138, screenH, 5, 12, -7400, False)
 
 # MAIN LOOP
 run = True
@@ -472,8 +475,9 @@ while run:
             explosion_sound.play()
             menu_state = "game over"
 
+        # FINAL ANIMATION
         if bg_y >= 0:
-            if alien_count <= 89: # afisam animatia de final
+            if alien_count <= 89:
                 screen.blit(alien_sprites[alien_count], (0, 0))
                 alien_count += 1
             else:
@@ -485,14 +489,14 @@ while run:
             if keys[pygame.K_UP] and player.y > player.vel:
                 if keys[pygame.K_LEFT] and player.y > player.vel and player.x > player.vel:
                     player.y -= player.vel
-                    player.x -= player.vel / 2
+                    player.x -= player.vel / 5  # miscarea pe diagonala este dublata deci trebuie redusa
                     player.up = True
                     player.down = False
                     player.left = True
                     player.right = False
                 elif keys[pygame.K_RIGHT] and player.y > player.vel and player.x < screenW - player.width - player.vel:
                     player.y -= player.vel
-                    player.x += player.vel / 2
+                    player.x += player.vel / 5
                     player.up = True
                     player.down = False
                     player.left = False
@@ -504,14 +508,14 @@ while run:
             elif keys[pygame.K_DOWN] and player.y < screenH - player.height - player.vel:
                 if keys[pygame.K_LEFT] and player.y < screenH - player.height - player.vel and player.x > player.vel:
                     player.y += player.vel
-                    player.x -= player.vel / 2
+                    player.x -= player.vel / 5
                     player.up = False
                     player.down = True
                     player.left = True
                     player.right = False
                 elif keys[pygame.K_RIGHT] and player.y < screenH - player.height - player.vel and player.x < screenW - player.width - player.vel:
                     player.y += player.vel
-                    player.x += player.vel / 2
+                    player.x += player.vel / 5
                     player.up = False
                     player.down = True
                     player.left = False
