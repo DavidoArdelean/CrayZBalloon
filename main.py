@@ -1,12 +1,10 @@
 """
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
-fa full screen sa arate ok
 aranjeaza enemies fara randomize
 """
 
 import pygame
 import classes
-import random
 pygame.init()
 
 alien_sprites = [pygame.image.load('Assets/alien/Final00.png'), pygame.image.load('Assets/alien/Final01.png'),
@@ -259,9 +257,31 @@ def drawGame():
 
         bird_L1.draw(screen)
         bird_R1.draw(screen)
+        bird_L2.draw(screen)
+        bird_R2.draw(screen)
+        bird_L3.draw(screen)
+        bird_R3.draw(screen)
+        bird_L4.draw(screen)
+        bird_R4.draw(screen)
+        bird_L5.draw(screen)
+        bird_R5.draw(screen)
+        bird_L6.draw(screen)
+        bird_R6.draw(screen)
+        bird_L7.draw(screen)
+        bird_R7.draw(screen)
+        bird_L8.draw(screen)
+        bird_R8.draw(screen)
+        bird_L9.draw(screen)
+        bird_R9.draw(screen)
 
         airplane_L1.draw(screen)
         airplane_R1.draw(screen)
+        airplane_L2.draw(screen)
+        airplane_R2.draw(screen)
+        airplane_L3.draw(screen)
+        airplane_R3.draw(screen)
+        airplane_L4.draw(screen)
+        airplane_R4.draw(screen)
 
         meteor_L1.draw(screen)
         meteor_R1.draw(screen)
@@ -282,25 +302,18 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 
 
 def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
-    global bg_y
-    global counter_started
-    global human
-    global alien_count
+    global bg_y, counter_started, human, alien_count
 
-    global bird_L1
-    global bird_R1
+    global bird_L1, bird_R1, bird_L2, bird_R2, bird_L3, bird_R3, bird_L4, bird_R4, bird_L5, bird_R5, \
+        bird_L6, bird_R6, bird_L7, bird_R7, bird_L8, bird_R8, bird_L9, bird_R9
 
-    global airplane_L1
-    global airplane_R1
+    global airplane_L1, airplane_R1, airplane_L2, airplane_R2, airplane_L3, airplane_R3, airplane_L4, airplane_R4
 
-    global meteor_L1
-    global meteor_R1
+    global meteor_L1, meteor_R1
 
-    global cloud_L1
-    global cloud_R1
+    global cloud_L1, cloud_R1
 
-    global witch_L1
-    global witch_R1
+    global witch_L1, witch_R1
 
     counter_started = False
     bg_y = -8688
@@ -309,29 +322,43 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     human.x = 10
     alien_count = 0
 
-    bird_L1 = Enemy(Enemy.bird_right, False, -80, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12,
-                    -8700, False)
-    bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -80, screenH, 4, 12,
-                    -8600, False)
+    bird_L1 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -8700, False)
+    bird_R1 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -8600, False)
+    bird_L2 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -8500, False)
+    bird_R2 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -8400, False)
+    bird_L3 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -8300, False)
+    bird_R3 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -8200, False)
+    bird_L4 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -8100, False)
+    bird_R4 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -8000, False)
+    bird_L5 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -7900, False)
+    bird_R5 = Enemy(Enemy.bird_left, True, screenW, 200, 64, 64, -80, screenH, 4, 12, -7800, False)
+    bird_L6 = Enemy(Enemy.bird_right, False, -80, 100, 64, 64, screenW, screenH, 4, 12, -7700, False)
+    bird_R6 = Enemy(Enemy.bird_left, True, screenW, 200, 64, 64, -80, screenH, 4, 12, -7600, False)
+    bird_L7 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -7500, False)
+    bird_R7 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -7400, False)
+    bird_L8 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -7200, False)
+    bird_R8 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -7000, False)
+    bird_L9 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -6800, False)
+    bird_R9 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -6600, False)
 
-    airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW,
-                        screenH, 4, 12, -8500, False)
-    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH,
-                        4, 12, -8400, False)
+    airplane_L1 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -7300, False)
+    airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -6500, False)
+    airplane_L2 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -6900, False)
+    airplane_R2 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -6200, False)
+    airplane_L3 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -6000, False)
+    airplane_R3 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -5900, False)
+    airplane_L4 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -5750, False)
+    airplane_R4 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -5500, False)
+
+    cloud_L1 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -1000, False)
+    cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -1000, False)
 
     # seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
-    meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -8200, True)
-    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -8000, True)
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1000, True)
+    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -1000, True)
 
-    cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5,
-                     20, -7900, False)
-    cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5,
-                     20, -7800, False)
-
-    witch_L1 = Enemy(Enemy.witch_right, False, -138, random.choice((100, 200, 300, 400)), 128, 128, screenW + 8,
-                     screenH, 5, 12, -7700, False)
-    witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, random.choice((100, 200, 300, 400)), 128, 138, -132, screenH,
-                     5, 12, -7400, False)
+    witch_L1 = Enemy(Enemy.witch_right, False, -138, 100, 128, 128, screenW + 8, screenH, 5, 12, -1000, False)
+    witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, 300, 128, 128, -138, screenH, 5, 12, -1000, False)
 
 
 # SOUNDS and MUSIC VARIABLES
@@ -407,21 +434,43 @@ human = human_walk(10, 448, 225, 3.5)
 # pune aici, pune in reset, pune in draw method + global variable, pune collision
 # enemy_type, side, x, y, width, height, x_end, y_end, vel, sprite_iteration, spawn_place, meteor_enemy
 
-bird_L1 = Enemy(Enemy.bird_right, False, -80, random.choice((100, 200, 300, 400)), 64, 64, screenW, screenH, 4, 12, -8700, False)
-bird_R1 = Enemy(Enemy.bird_left, True, screenW, random.choice((100, 200, 300, 400)), 64, 64, -80, screenH, 4, 12, -8600, False)
+bird_L1 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -8700, False)
+bird_R1 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -8600, False)
+bird_L2 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -8500, False)
+bird_R2 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -8400, False)
+bird_L3 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -8300, False)
+bird_R3 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -8200, False)
+bird_L4 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -8100, False)
+bird_R4 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -8000, False)
+bird_L5 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -7900, False)
+bird_R5 = Enemy(Enemy.bird_left, True, screenW, 200, 64, 64, -80, screenH, 4, 12, -7800, False)
+bird_L6 = Enemy(Enemy.bird_right, False, -80, 100, 64, 64, screenW, screenH, 4, 12, -7700, False)
+bird_R6 = Enemy(Enemy.bird_left, True, screenW, 200, 64, 64, -80, screenH, 4, 12, -7600, False)
+bird_L7 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -7500, False)
+bird_R7 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -7400, False)
+bird_L8 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -7200, False)
+bird_R8 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -7000, False)
+bird_L9 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -6800, False)
+bird_R9 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -6600, False)
 
-airplane_L1 = Enemy(Enemy.airplane_right, False, -220, random.choice((100, 200, 300, 400)), 220, 92, screenW, screenH, 4, 12, -8500, False)
-airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, random.choice((100, 200, 300, 400)), 220, 92, -220, screenH, 4, 12, -8400, False)
+airplane_L1 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -7300, False)
+airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -6500, False)
+airplane_L2 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -6900, False)
+airplane_R2 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -6200, False)
+airplane_L3 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -6000, False)
+airplane_R3 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -5900, False)
+airplane_L4 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -5750, False)
+airplane_R4 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -5500, False)
+
+cloud_L1 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -1000, False)
+cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -1000, False)
 
 #seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
-meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -8200, True)
-meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -8000, True)
+meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1000, True)
+meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -1000, True)
 
-cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 20, -7900, False)
-cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 20, -7800, False)
-
-witch_L1 = Enemy(Enemy.witch_right, False, -138, random.choice((100, 200, 300, 400)), 128, 128, screenW + 8, screenH, 5, 12, -7700, False)
-witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, random.choice((100, 200, 300, 400)), 128, 128, -138, screenH, 5, 12, -7400, False)
+witch_L1 = Enemy(Enemy.witch_right, False, -138, 100, 128, 128, screenW + 8, screenH, 5, 12, -1000, False)
+witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, 300, 128, 128, -138, screenH, 5, 12, -1000, False)
 
 # MAIN LOOP
 run = True
@@ -460,9 +509,31 @@ while run:
         # COLLISION CODE
         if (check_collision(player, bird_L1)
             or check_collision(player, bird_R1)
+            or check_collision(player, bird_L2)
+            or check_collision(player, bird_R2)
+            or check_collision(player, bird_L3)
+            or check_collision(player, bird_R3)
+            or check_collision(player, bird_L4)
+            or check_collision(player, bird_R4)
+            or check_collision(player, bird_L5)
+            or check_collision(player, bird_R5)
+            or check_collision(player, bird_L6)
+            or check_collision(player, bird_R6)
+            or check_collision(player, bird_L7)
+            or check_collision(player, bird_R7)
+            or check_collision(player, bird_L8)
+            or check_collision(player, bird_R8)
+            or check_collision(player, bird_L9)
+            or check_collision(player, bird_R9)
 
             or check_collision(player, airplane_L1)
             or check_collision(player, airplane_R1)
+            or check_collision(player, airplane_L2)
+            or check_collision(player, airplane_R2)
+            or check_collision(player, airplane_L3)
+            or check_collision(player, airplane_R3)
+            or check_collision(player, airplane_L4)
+            or check_collision(player, airplane_R4)
 
             or check_collision(player, meteor_L1)
             or check_collision(player, meteor_R1)
