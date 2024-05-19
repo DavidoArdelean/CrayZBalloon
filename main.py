@@ -3,6 +3,8 @@ invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de
 fa full screen sa arate ok
 fa muzica, sunete la fiecare enemy si fiecare miscare
 aranjeaza enemies fara randomize
+schimba sunetu de cloud1 cauta in recycle bin pc
+fa sunetul la meteor ca nu e bun si nici la witch ????
 """
 
 import pygame
@@ -219,7 +221,7 @@ class Enemy:
                     self.x += self.vel
 
     def sounds(self):
-        if self.side and self.x == 500:
+        if self.side and self.x == 500:  # play sound daca vine din dreapta si X trece prin px 500
             if self.enemy_type == Enemy.bird_left:
                 bird_sound.play()
             elif self.enemy_type == Enemy.airplane_left:
@@ -227,10 +229,23 @@ class Enemy:
             elif self.enemy_type == Enemy.cloud_left:
                 cloud_sound.play()
             elif self.enemy_type == Enemy.witch_left:
+                witch_sound.play()
+
+        if self.meteor_enemy:
+            if self.side and self.y == 10 and self.x == 500:  # daca vine din dr si trece prin px Y 10 si X 500
+                meteor_sound.play()
+            if not self.side and self.y == 10 and self.x == -self.width + 20:  # daca vine din stg si trece prin px Y 10 si X-width+20
                 meteor_sound.play()
 
-        elif self.meteor_enemy and self.y == 10:
-            meteor_sound.play()
+        if not self.side and self.x == -self.width + 20:  # play sound daca vine din stanga si X trece prin px -width+20
+            if self.enemy_type == Enemy.bird_right:
+                bird_sound.play()
+            elif self.enemy_type == Enemy.airplane_right:
+                airplane_sound.play()
+            elif self.enemy_type == Enemy.cloud_right:
+                cloud_sound.play()
+            elif self.enemy_type == Enemy.witch_right:
+                witch_sound.play()
 
 
 def drawGame():
@@ -238,11 +253,11 @@ def drawGame():
         human.draw(screen)
     else:
         global bg_y
-        bg_y += 3
-        if bg_y < bg.get_height() * -1:
-            bg_y = bg.get_height()
-        screen.blit(bg, (0, bg_y))
-        if bg_y <= 0:
+        if bg_y < 0:
+            bg_y += 3
+            if bg_y < bg.get_height() * -1:
+                bg_y = bg.get_height()
+            screen.blit(bg, (0, bg_y))
             player.draw(screen)
 
         bird_L1.draw(screen)
@@ -325,20 +340,17 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
 
 # SOUNDS and MUSIC VARIABLES
 bird_sound = pygame.mixer.Sound('sounds/birds1.wav')
+bird_sound.set_volume(0.7)
 airplane_sound = pygame.mixer.Sound('sounds/plane1.wav')
 cloud_sound = pygame.mixer.Sound('sounds/cloud1.wav')
 meteor_sound = pygame.mixer.Sound('sounds/meteor1.wav')
 witch_sound = pygame.mixer.Sound('sounds/witch2.wav')
 walk_sound = pygame.mixer.Sound('sounds/steps1.wav')
-
-game_music1 = pygame.mixer.Sound('sounds/menusong1.mp3')
-game_music2 = pygame.mixer.Sound('sounds/menusong2.mp3')
-game_music3 = pygame.mixer.Sound('sounds/song1.mp3')
-game_music4 = pygame.mixer.Sound('sounds/song2.mp3')
-game_music = [game_music1, game_music2, game_music3, game_music4]
-
-#fa game_music o singura melodie legata din 4 si day play doar la asta la infinit
-game_music.play(-1)
+explosion_sound = pygame.mixer.Sound('sounds/explosion.wav')
+click_sound = pygame.mixer.Sound('sounds/click.wav')
+game_music = pygame.mixer.Sound('sounds/music.wav')
+game_music.set_volume(0.6)
+game_music.play(-1)  # canta muzica la infinit
 
 #variables from game images
 pygame.display.set_caption("Cray-Z Balloon")
@@ -405,8 +417,8 @@ meteor_R1 = Enemy(Enemy.meteor_left, True, screenW, random.choice((-350, -256, 0
 cloud_L1 = Enemy(Enemy.cloud_right, False, -100, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 20, -7900, False)
 cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 20, -7800, False)
 
-witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 100, 100, screenW, screenH, 5, 12, -7700, False)
-witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 100, 100, -100, screenH, 5, 12, -7600, False)
+witch_L1 = Enemy(Enemy.witch_right, False, -128, random.choice((100, 200, 300, 400)), 128, 128, screenW, screenH, 5, 12, -7700, False)
+witch_R1 = Enemy(Enemy.witch_left, True, screenW, random.choice((100, 200, 300, 400)), 128, 128, -100, screenH, 5, 12, -7600, False)
 
 # MAIN LOOP
 run = True
@@ -418,11 +430,13 @@ while run:
         reset_game()  # resetam variables cand suntem in main
         screen.fill((52, 50, 150))
         if start_button.draw(screen):
+            click_sound.play()
             walk_sound.play()
             menu_state = "play"
             counter = 0  # Reset counter when starting gameplay
             counter_started = True
         if hs_button.draw(screen):
+            click_sound.play()
             menu_state = "highscore"
         if quit_button.draw(screen):
             run = False
@@ -455,6 +469,7 @@ while run:
 
             or check_collision(player, witch_L1)
             or check_collision(player, witch_R1)):
+            explosion_sound.play()
             menu_state = "game over"
 
         if bg_y >= 0:
@@ -519,6 +534,7 @@ while run:
         screen.blit(surface, (0, 0))
 
         if resume_button.draw(screen):
+            click_sound.play()
             menu_state = "play"
         if quit_button.draw(screen):
             run = False
@@ -530,6 +546,7 @@ while run:
             draw_text("Highscore: " + str(score_file.read()), font, TEXT_COL, 180, screenH / 2 - 10)
 
         if back_button.draw(screen):  # + arata back button
+            click_sound.play()
             menu_state = "main"
 
     if menu_state == "game over":
@@ -541,6 +558,7 @@ while run:
         if quit_button.draw(screen):
             run = False
         if main_button.draw(screen):
+            click_sound.play()
             menu_state = "main"
 
     # Event checker
