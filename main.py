@@ -283,11 +283,17 @@ def drawGame():
         airplane_L4.draw(screen)
         airplane_R4.draw(screen)
 
-        meteor_L1.draw(screen)
-        meteor_R1.draw(screen)
-
         cloud_L1.draw(screen)
         cloud_R1.draw(screen)
+        cloud_L2.draw(screen)
+        cloud_R2.draw(screen)
+        cloud_L3.draw(screen)
+        cloud_R3.draw(screen)
+        cloud_L4.draw(screen)
+        cloud_R4.draw(screen)
+
+        meteor_L1.draw(screen)
+        meteor_R1.draw(screen)
 
         witch_L1.draw(screen)
         witch_R1.draw(screen)
@@ -309,9 +315,9 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
 
     global airplane_L1, airplane_R1, airplane_L2, airplane_R2, airplane_L3, airplane_R3, airplane_L4, airplane_R4
 
-    global meteor_L1, meteor_R1
+    global cloud_L1, cloud_R1, cloud_L2, cloud_R2, cloud_L3, cloud_R3, cloud_L4, cloud_R4
 
-    global cloud_L1, cloud_R1
+    global meteor_L1, meteor_R1
 
     global witch_L1, witch_R1
 
@@ -339,19 +345,25 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     bird_L8 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -7200, False)
     bird_R8 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -7000, False)
     bird_L9 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -6800, False)
-    bird_R9 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -6600, False)
+    bird_R9 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -5700, False)
 
     airplane_L1 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -7300, False)
     airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -6500, False)
     airplane_L2 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -6900, False)
     airplane_R2 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -6200, False)
-    airplane_L3 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -6000, False)
-    airplane_R3 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -5900, False)
-    airplane_L4 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -5750, False)
-    airplane_R4 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -5500, False)
+    airplane_L3 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -5900, False)
+    airplane_R3 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -5650, False)
+    airplane_L4 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -5250, False)
+    airplane_R4 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -5100, False)
 
-    cloud_L1 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -1000, False)
-    cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -1000, False)
+    cloud_L1 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -5450, False)
+    cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -5200, False)
+    cloud_L2 = Enemy(Enemy.cloud_right, False, -100, 100, 100, 100, screenW, screenH, 5, 20, -4900, False)
+    cloud_R2 = Enemy(Enemy.cloud_left, True, screenW, 400, 100, 100, -100, screenH, 5, 20, -4850, False)
+    cloud_L3 = Enemy(Enemy.cloud_right, False, -100, 200, 100, 100, screenW, screenH, 5, 20, -4700, False)
+    cloud_R3 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -4500, False)
+    cloud_L4 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -4400, False)
+    cloud_R4 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -4250, False)
 
     # seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
     meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1000, True)
@@ -451,19 +463,25 @@ bird_R7 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12
 bird_L8 = Enemy(Enemy.bird_right, False, -80, 200, 64, 64, screenW, screenH, 4, 12, -7200, False)
 bird_R8 = Enemy(Enemy.bird_left, True, screenW, 100, 64, 64, -80, screenH, 4, 12, -7000, False)
 bird_L9 = Enemy(Enemy.bird_right, False, -80, 300, 64, 64, screenW, screenH, 4, 12, -6800, False)
-bird_R9 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -6600, False)
+bird_R9 = Enemy(Enemy.bird_left, True, screenW, 400, 64, 64, -80, screenH, 4, 12, -5700, False)
 
 airplane_L1 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -7300, False)
 airplane_R1 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -6500, False)
 airplane_L2 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -6900, False)
 airplane_R2 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -6200, False)
-airplane_L3 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -6000, False)
-airplane_R3 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -5900, False)
-airplane_L4 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -5750, False)
-airplane_R4 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -5500, False)
+airplane_L3 = Enemy(Enemy.airplane_right, False, -220, 300, 220, 92, screenW, screenH, 4, 12, -5900, False)
+airplane_R3 = Enemy(Enemy.airplane_left, True, screenW, 100, 220, 92, -220, screenH, 4, 12, -5650, False)
+airplane_L4 = Enemy(Enemy.airplane_right, False, -220, 400, 220, 92, screenW, screenH, 4, 12, -5250, False)
+airplane_R4 = Enemy(Enemy.airplane_left, True, screenW, 200, 220, 92, -220, screenH, 4, 12, -5100, False)
 
-cloud_L1 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -1000, False)
-cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -1000, False)
+cloud_L1 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -5450, False)
+cloud_R1 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -5200, False)
+cloud_L2 = Enemy(Enemy.cloud_right, False, -100, 100, 100, 100, screenW, screenH, 5, 20, -4900, False)
+cloud_R2 = Enemy(Enemy.cloud_left, True, screenW, 400, 100, 100, -100, screenH, 5, 20, -4850, False)
+cloud_L3 = Enemy(Enemy.cloud_right, False, -100, 200, 100, 100, screenW, screenH, 5, 20, -4700, False)
+cloud_R3 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -4500, False)
+cloud_L4 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -4400, False)
+cloud_R4 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -4250, False)
 
 #seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
 meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1000, True)
@@ -535,14 +553,21 @@ while run:
             or check_collision(player, airplane_L4)
             or check_collision(player, airplane_R4)
 
+            or check_collision(player, cloud_L1)
+            or check_collision(player, cloud_R1)
+            or check_collision(player, cloud_L2)
+            or check_collision(player, cloud_R2)
+            or check_collision(player, cloud_L3)
+            or check_collision(player, cloud_R3)
+            or check_collision(player, cloud_L4)
+            or check_collision(player, cloud_R4)
+
             or check_collision(player, meteor_L1)
             or check_collision(player, meteor_R1)
 
-            or check_collision(player, cloud_L1)
-            or check_collision(player, cloud_R1)
-
             or check_collision(player, witch_L1)
-            or check_collision(player, witch_R1)):
+            or check_collision(player, witch_R1)
+        ):
             explosion_sound.play()
             menu_state = "game over"
 
