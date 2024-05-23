@@ -1,6 +1,6 @@
 """
 invata sprite groups pt o collision mai simpla ? nu-i nevoie, faci cu o lista de enemies prin care iterezi
-aranjeaza enemies fara randomize
+testeaza ultimul aranjament de enemies
 """
 
 import pygame
@@ -291,12 +291,37 @@ def drawGame():
         cloud_R3.draw(screen)
         cloud_L4.draw(screen)
         cloud_R4.draw(screen)
+        cloud_L5.draw(screen)
+        cloud_R5.draw(screen)
+        cloud_L6.draw(screen)
+        cloud_R6.draw(screen)
+        cloud_L7.draw(screen)
+        cloud_R7.draw(screen)
 
         meteor_L1.draw(screen)
         meteor_R1.draw(screen)
+        meteor_L2.draw(screen)
+        meteor_R2.draw(screen)
+        meteor_L3.draw(screen)
+        meteor_R3.draw(screen)
+        meteor_L4.draw(screen)
+        meteor_R4.draw(screen)
+        meteor_L5.draw(screen)
+        meteor_R5.draw(screen)
+        meteor_L6.draw(screen)
+        meteor_R6.draw(screen)
+        meteor_R7.draw(screen)
 
         witch_L1.draw(screen)
         witch_R1.draw(screen)
+        witch_L2.draw(screen)
+        witch_R2.draw(screen)
+        witch_L3.draw(screen)
+        witch_R3.draw(screen)
+        witch_L4.draw(screen)
+        witch_R4.draw(screen)
+        witch_L5.draw(screen)
+
 
         pygame.display.update()
 
@@ -310,16 +335,18 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     global bg_y, counter_started, human, alien_count
 
-    global bird_L1, bird_R1, bird_L2, bird_R2, bird_L3, bird_R3, bird_L4, bird_R4, bird_L5, bird_R5, \
+    global bird_L1, bird_R1, bird_L2, bird_R2, bird_L3, bird_R3, bird_L4, bird_R4, bird_L5, bird_R5,\
         bird_L6, bird_R6, bird_L7, bird_R7, bird_L8, bird_R8, bird_L9, bird_R9
 
     global airplane_L1, airplane_R1, airplane_L2, airplane_R2, airplane_L3, airplane_R3, airplane_L4, airplane_R4
 
-    global cloud_L1, cloud_R1, cloud_L2, cloud_R2, cloud_L3, cloud_R3, cloud_L4, cloud_R4
+    global cloud_L1, cloud_R1, cloud_L2, cloud_R2, cloud_L3, cloud_R3, cloud_L4, cloud_R4, cloud_L5,\
+        cloud_R5, cloud_L6, cloud_R6, cloud_L7, cloud_R7
 
-    global meteor_L1, meteor_R1
+    global meteor_L1, meteor_R1, meteor_L2, meteor_R2, meteor_L3, meteor_R3, meteor_L4, meteor_R4, meteor_L5, meteor_R5, \
+        meteor_L6, meteor_R6, meteor_R7
 
-    global witch_L1, witch_R1
+    global witch_L1, witch_R1, witch_L2, witch_R2, witch_L3, witch_R3, witch_L4, witch_R4, witch_L5
 
     counter_started = False
     bg_y = -8688
@@ -365,17 +392,42 @@ def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     cloud_L4 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -4400, False)
     cloud_R4 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -4250, False)
 
-    # seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
-    meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1000, True)
-    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -1000, True)
+    cloud_L5 = Enemy(Enemy.cloud_right, False, -100, 100, 100, 100, screenW, screenH, 5, 20, -4100, False)
+    cloud_R5 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -3950, False)
+    cloud_L6 = Enemy(Enemy.cloud_right, False, -100, 200, 100, 100, screenW, screenH, 5, 20, -3700, False)
+    cloud_R6 = Enemy(Enemy.cloud_left, True, screenW, 400, 100, 100, -100, screenH, 5, 20, -3500, False)
+    cloud_L7 = Enemy(Enemy.cloud_right, False, -100, 100, 100, 100, screenW, screenH, 5, 20, -3300, False)
+    cloud_R7 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -3100, False)
 
-    witch_L1 = Enemy(Enemy.witch_right, False, -138, 100, 128, 128, screenW + 8, screenH, 5, 12, -1000, False)
-    witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, 300, 128, 128, -138, screenH, 5, 12, -1000, False)
+    # seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
+    meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -3600, True)
+    meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -3400, True)
+    meteor_L2 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -3050, True)
+    meteor_R2 = Enemy(Enemy.meteor_left, True, screenW + 6, -240, 128, 128, -134, screenH, 6, 16, -2900, True)
+    meteor_L3 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -2700, True)
+    meteor_R3 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -2450, True)
+    meteor_L4 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -2100, True)
+    meteor_R4 = Enemy(Enemy.meteor_left, True, screenW + 6, -360, 128, 128, -134, screenH, 6, 16, -1850, True)
+    meteor_L5 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1550, True)
+    meteor_R5 = Enemy(Enemy.meteor_left, True, screenW + 6, -360, 128, 128, -134, screenH, 6, 16, -1250, True)
+    meteor_L6 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1100, True)
+    meteor_R6 = Enemy(Enemy.meteor_left, True, screenW + 6, -360, 128, 128, -134, screenH, 6, 16, -650, True)
+    meteor_R7 = Enemy(Enemy.meteor_left, True, screenW + 6, 180, 128, 128, -134, screenH, 6, 16, -650, True)
+
+    witch_L1 = Enemy(Enemy.witch_right, False, -138, 380, 128, 128, screenW + 8, screenH, 5, 12, -2300, False)
+    witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, 50, 128, 128, -138, screenH, 5, 12, -2100, False)
+    witch_L2 = Enemy(Enemy.witch_right, False, -138, 180, 128, 128, screenW + 8, screenH, 5, 12, -1900, False)
+    witch_R2 = Enemy(Enemy.witch_left, True, screenW + 8, 250, 128, 128, -138, screenH, 5, 12, -1700, False)
+    witch_L3 = Enemy(Enemy.witch_right, False, -138, 120, 128, 128, screenW + 8, screenH, 5, 12, -1500, False)
+    witch_R3 = Enemy(Enemy.witch_left, True, screenW + 8, 50, 128, 128, -138, screenH, 5, 12, -1300, False)
+    witch_L4 = Enemy(Enemy.witch_right, False, -138, 250, 128, 128, screenW + 8, screenH, 5, 12, -1100, False)
+    witch_R4 = Enemy(Enemy.witch_left, True, screenW + 8, 380, 128, 128, -138, screenH, 5, 12, -900, False)
+    witch_L5 = Enemy(Enemy.witch_right, False, -138, 50, 128, 128, screenW + 8, screenH, 5, 12, -700, False)
 
 
 # SOUNDS and MUSIC VARIABLES
 bird_sound = pygame.mixer.Sound('sounds/birds1.wav')
-bird_sound.set_volume(0.6)
+bird_sound.set_volume(0.4)
 airplane_sound = pygame.mixer.Sound('sounds/plane1.wav')
 airplane_sound.set_volume(0.9)
 cloud_sound = pygame.mixer.Sound('sounds/cloud1.wav')
@@ -483,12 +535,37 @@ cloud_R3 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 
 cloud_L4 = Enemy(Enemy.cloud_right, False, -100, 400, 100, 100, screenW, screenH, 5, 20, -4400, False)
 cloud_R4 = Enemy(Enemy.cloud_left, True, screenW, 200, 100, 100, -100, screenH, 5, 20, -4250, False)
 
-#seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
-meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1000, True)
-meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -1000, True)
+cloud_L5 = Enemy(Enemy.cloud_right, False, -100, 100, 100, 100, screenW, screenH, 5, 20, -4100, False)
+cloud_R5 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -3950, False)
+cloud_L6 = Enemy(Enemy.cloud_right, False, -100, 200, 100, 100, screenW, screenH, 5, 20, -3700, False)
+cloud_R6 = Enemy(Enemy.cloud_left, True, screenW, 400, 100, 100, -100, screenH, 5, 20, -3500, False)
+cloud_L7 = Enemy(Enemy.cloud_right, False, -100, 100, 100, 100, screenW, screenH, 5, 20, -3300, False)
+cloud_R7 = Enemy(Enemy.cloud_left, True, screenW, 300, 100, 100, -100, screenH, 5, 20, -3100, False)
 
-witch_L1 = Enemy(Enemy.witch_right, False, -138, 100, 128, 128, screenW + 8, screenH, 5, 12, -1000, False)
-witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, 300, 128, 128, -138, screenH, 5, 12, -1000, False)
+#seteaza FIX Y ca sa mearga sunetul dupa multiplu de vel adica 6
+meteor_L1 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -3600, True)
+meteor_R1 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -3400, True)
+meteor_L2 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -3050, True)
+meteor_R2 = Enemy(Enemy.meteor_left, True, screenW + 6, -240, 128, 128, -134, screenH, 6, 16, -2900, True)
+meteor_L3 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -2700, True)
+meteor_R3 = Enemy(Enemy.meteor_left, True, screenW + 6, -6, 128, 128, -134, screenH, 6, 16, -2450, True)
+meteor_L4 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -2100, True)
+meteor_R4 = Enemy(Enemy.meteor_left, True, screenW + 6, -360, 128, 128, -134, screenH, 6, 16, -1850, True)
+meteor_L5 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1550, True)
+meteor_R5 = Enemy(Enemy.meteor_left, True, screenW + 6, -360, 128, 128, -134, screenH, 6, 16, -1250, True)
+meteor_L6 = Enemy(Enemy.meteor_right, False, -134, -6, 128, 128, screenW, screenH, 6, 16, -1100, True)
+meteor_R6 = Enemy(Enemy.meteor_left, True, screenW + 6, -360, 128, 128, -134, screenH, 6, 16, -650, True)
+meteor_R7 = Enemy(Enemy.meteor_left, True, screenW + 6, 180, 128, 128, -134, screenH, 6, 16, -650, True)
+
+witch_L1 = Enemy(Enemy.witch_right, False, -138, 380, 128, 128, screenW + 8, screenH, 5, 12, -2300, False)
+witch_R1 = Enemy(Enemy.witch_left, True, screenW + 8, 50, 128, 128, -138, screenH, 5, 12, -2100, False)
+witch_L2 = Enemy(Enemy.witch_right, False, -138, 180, 128, 128, screenW + 8, screenH, 5, 12, -1900, False)
+witch_R2 = Enemy(Enemy.witch_left, True, screenW + 8, 250, 128, 128, -138, screenH, 5, 12, -1700, False)
+witch_L3 = Enemy(Enemy.witch_right, False, -138, 120, 128, 128, screenW + 8, screenH, 5, 12, -1500, False)
+witch_R3 = Enemy(Enemy.witch_left, True, screenW + 8, 50, 128, 128, -138, screenH, 5, 12, -1300, False)
+witch_L4 = Enemy(Enemy.witch_right, False, -138, 250, 128, 128, screenW + 8, screenH, 5, 12, -1100, False)
+witch_R4 = Enemy(Enemy.witch_left, True, screenW + 8, 380, 128, 128, -138, screenH, 5, 12, -900, False)
+witch_L5 = Enemy(Enemy.witch_right, False, -138, 50, 128, 128, screenW + 8, screenH, 5, 12, -700, False)
 
 # MAIN LOOP
 run = True
@@ -526,47 +603,72 @@ while run:
 
         # COLLISION CODE
         if (check_collision(player, bird_L1)
-            or check_collision(player, bird_R1)
-            or check_collision(player, bird_L2)
-            or check_collision(player, bird_R2)
-            or check_collision(player, bird_L3)
-            or check_collision(player, bird_R3)
-            or check_collision(player, bird_L4)
-            or check_collision(player, bird_R4)
-            or check_collision(player, bird_L5)
-            or check_collision(player, bird_R5)
-            or check_collision(player, bird_L6)
-            or check_collision(player, bird_R6)
-            or check_collision(player, bird_L7)
-            or check_collision(player, bird_R7)
-            or check_collision(player, bird_L8)
-            or check_collision(player, bird_R8)
-            or check_collision(player, bird_L9)
-            or check_collision(player, bird_R9)
+            #or check_collision(player, bird_R1)
+            #or check_collision(player, bird_L2)
+            #or check_collision(player, bird_R2)
+            #or check_collision(player, bird_L3)
+            #or check_collision(player, bird_R3)
+            #or check_collision(player, bird_L4)
+            #or check_collision(player, bird_R4)
+            #or check_collision(player, bird_L5)
+            #or check_collision(player, bird_R5)
+            #or check_collision(player, bird_L6)
+            #or check_collision(player, bird_R6)
+            #or check_collision(player, bird_L7)
+            #or check_collision(player, bird_R7)
+            #or check_collision(player, bird_L8)
+            #or check_collision(player, bird_R8)
+            #or check_collision(player, bird_L9)
+            #or check_collision(player, bird_R9)
 
-            or check_collision(player, airplane_L1)
-            or check_collision(player, airplane_R1)
-            or check_collision(player, airplane_L2)
-            or check_collision(player, airplane_R2)
-            or check_collision(player, airplane_L3)
-            or check_collision(player, airplane_R3)
-            or check_collision(player, airplane_L4)
-            or check_collision(player, airplane_R4)
+            #or check_collision(player, airplane_L1)
+            #or check_collision(player, airplane_R1)
+            #or check_collision(player, airplane_L2)
+            #or check_collision(player, airplane_R2)
+            #or check_collision(player, airplane_L3)
+            #or check_collision(player, airplane_R3)
+            #or check_collision(player, airplane_L4)
+            #or check_collision(player, airplane_R4)
 
-            or check_collision(player, cloud_L1)
-            or check_collision(player, cloud_R1)
-            or check_collision(player, cloud_L2)
-            or check_collision(player, cloud_R2)
-            or check_collision(player, cloud_L3)
-            or check_collision(player, cloud_R3)
-            or check_collision(player, cloud_L4)
-            or check_collision(player, cloud_R4)
+            #or check_collision(player, cloud_L1)
+            #or check_collision(player, cloud_R1)
+            #or check_collision(player, cloud_L2)
+            #or check_collision(player, cloud_R2)
+            #or check_collision(player, cloud_L3)
+            #or check_collision(player, cloud_R3)
+            #or check_collision(player, cloud_L4)
+            #or check_collision(player, cloud_R4)
+            #or check_collision(player, cloud_L5)
+            #or check_collision(player, cloud_R5)
+            #or check_collision(player, cloud_L6)
+            #or check_collision(player, cloud_R6)
+            #or check_collision(player, cloud_L7)
+            #or check_collision(player, cloud_R7)
 
-            or check_collision(player, meteor_L1)
-            or check_collision(player, meteor_R1)
+            #or check_collision(player, meteor_L1)
+            #or check_collision(player, meteor_R1)
+            #or check_collision(player, meteor_L2)
+            #or check_collision(player, meteor_R2)
+            #or check_collision(player, meteor_L3)
+            #or check_collision(player, meteor_R3)
+            #or check_collision(player, meteor_L4)
+            #or check_collision(player, meteor_R4)
+            #or check_collision(player, meteor_L5)
+            #or check_collision(player, meteor_R5)
+            #or check_collision(player, meteor_L6)
+            #or check_collision(player, meteor_R6)
+            #or check_collision(player, meteor_R7)
 
-            or check_collision(player, witch_L1)
-            or check_collision(player, witch_R1)
+            #or check_collision(player, witch_L1)
+            #or check_collision(player, witch_R1)
+            #or check_collision(player, witch_L2)
+            #or check_collision(player, witch_R2)
+            #or check_collision(player, witch_L3)
+            #or check_collision(player, witch_R3)
+            #or check_collision(player, witch_L4)
+            #or check_collision(player, witch_R4)
+            #or check_collision(player, witch_L5)
+
         ):
             explosion_sound.play()
             menu_state = "game over"
