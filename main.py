@@ -335,12 +335,12 @@ def check_collision(obj1, obj2):  # method ce verifica coliziunea intre 2 obiect
 def reset_game():  #  resetam toate variabilele ca si locatie a obiectelor
     global bg_y, counter_started, human, alien_count
 
-    global bird_L1, bird_R1, bird_L2, bird_R2, bird_L3, bird_R3, bird_L4, bird_R4, bird_L5, bird_R5,\
+    global bird_L1, bird_R1, bird_L2, bird_R2, bird_L3, bird_R3, bird_L4, bird_R4, bird_L5, bird_R5, \
         bird_L6, bird_R6, bird_L7, bird_R7, bird_L8, bird_R8, bird_L9, bird_R9
 
     global airplane_L1, airplane_R1, airplane_L2, airplane_R2, airplane_L3, airplane_R3, airplane_L4, airplane_R4
 
-    global cloud_L1, cloud_R1, cloud_L2, cloud_R2, cloud_L3, cloud_R3, cloud_L4, cloud_R4, cloud_L5,\
+    global cloud_L1, cloud_R1, cloud_L2, cloud_R2, cloud_L3, cloud_R3, cloud_L4, cloud_R4, cloud_L5, \
         cloud_R5, cloud_L6, cloud_R6, cloud_L7, cloud_R7
 
     global meteor_L1, meteor_R1, meteor_L2, meteor_R2, meteor_L3, meteor_R3, meteor_L4, meteor_R4, meteor_L5, meteor_R5, \
@@ -567,6 +567,7 @@ witch_L4 = Enemy(Enemy.witch_right, False, -138, 250, 128, 128, screenW + 8, scr
 witch_R4 = Enemy(Enemy.witch_left, True, screenW + 8, 380, 128, 128, -138, screenH, 5, 12, -900, False)
 witch_L5 = Enemy(Enemy.witch_right, False, -138, 50, 128, 128, screenW + 8, screenH, 5, 12, -700, False)
 
+
 # MAIN LOOP
 run = True
 while run:
@@ -603,73 +604,71 @@ while run:
 
         # COLLISION CODE
         if (check_collision(player, bird_L1)
-            #or check_collision(player, bird_R1)
-            #or check_collision(player, bird_L2)
-            #or check_collision(player, bird_R2)
-            #or check_collision(player, bird_L3)
-            #or check_collision(player, bird_R3)
-            #or check_collision(player, bird_L4)
-            #or check_collision(player, bird_R4)
-            #or check_collision(player, bird_L5)
-            #or check_collision(player, bird_R5)
-            #or check_collision(player, bird_L6)
-            #or check_collision(player, bird_R6)
-            #or check_collision(player, bird_L7)
-            #or check_collision(player, bird_R7)
-            #or check_collision(player, bird_L8)
-            #or check_collision(player, bird_R8)
-            #or check_collision(player, bird_L9)
-            #or check_collision(player, bird_R9)
+            or check_collision(player, bird_R1)
+            or check_collision(player, bird_L2)
+            or check_collision(player, bird_R2)
+            or check_collision(player, bird_L3)
+            or check_collision(player, bird_R3)
+            or check_collision(player, bird_L4)
+            or check_collision(player, bird_R4)
+            or check_collision(player, bird_L5)
+            or check_collision(player, bird_R5)
+            or check_collision(player, bird_L6)
+            or check_collision(player, bird_R6)
+            or check_collision(player, bird_L7)
+            or check_collision(player, bird_R7)
+            or check_collision(player, bird_L8)
+            or check_collision(player, bird_R8)
+            or check_collision(player, bird_L9)
+            or check_collision(player, bird_R9)
 
-            #or check_collision(player, airplane_L1)
-            #or check_collision(player, airplane_R1)
-            #or check_collision(player, airplane_L2)
-            #or check_collision(player, airplane_R2)
-            #or check_collision(player, airplane_L3)
-            #or check_collision(player, airplane_R3)
-            #or check_collision(player, airplane_L4)
-            #or check_collision(player, airplane_R4)
+            or check_collision(player, airplane_L1)
+            or check_collision(player, airplane_R1)
+            or check_collision(player, airplane_L2)
+            or check_collision(player, airplane_R2)
+            or check_collision(player, airplane_L3)
+            or check_collision(player, airplane_R3)
+            or check_collision(player, airplane_L4)
+            or check_collision(player, airplane_R4)
 
-            #or check_collision(player, cloud_L1)
-            #or check_collision(player, cloud_R1)
-            #or check_collision(player, cloud_L2)
-            #or check_collision(player, cloud_R2)
-            #or check_collision(player, cloud_L3)
-            #or check_collision(player, cloud_R3)
-            #or check_collision(player, cloud_L4)
-            #or check_collision(player, cloud_R4)
-            #or check_collision(player, cloud_L5)
-            #or check_collision(player, cloud_R5)
-            #or check_collision(player, cloud_L6)
-            #or check_collision(player, cloud_R6)
-            #or check_collision(player, cloud_L7)
-            #or check_collision(player, cloud_R7)
+            or check_collision(player, cloud_L1)
+            or check_collision(player, cloud_R1)
+            or check_collision(player, cloud_L2)
+            or check_collision(player, cloud_R2)
+            or check_collision(player, cloud_L3)
+            or check_collision(player, cloud_R3)
+            or check_collision(player, cloud_L4)
+            or check_collision(player, cloud_R4)
+            or check_collision(player, cloud_L5)
+            or check_collision(player, cloud_R5)
+            or check_collision(player, cloud_L6)
+            or check_collision(player, cloud_R6)
+            or check_collision(player, cloud_L7)
+            or check_collision(player, cloud_R7)
 
-            #or check_collision(player, meteor_L1)
-            #or check_collision(player, meteor_R1)
-            #or check_collision(player, meteor_L2)
-            #or check_collision(player, meteor_R2)
-            #or check_collision(player, meteor_L3)
-            #or check_collision(player, meteor_R3)
-            #or check_collision(player, meteor_L4)
-            #or check_collision(player, meteor_R4)
-            #or check_collision(player, meteor_L5)
-            #or check_collision(player, meteor_R5)
-            #or check_collision(player, meteor_L6)
-            #or check_collision(player, meteor_R6)
-            #or check_collision(player, meteor_R7)
+            or check_collision(player, meteor_L1)
+            or check_collision(player, meteor_R1)
+            or check_collision(player, meteor_L2)
+            or check_collision(player, meteor_R2)
+            or check_collision(player, meteor_L3)
+            or check_collision(player, meteor_R3)
+            or check_collision(player, meteor_L4)
+            or check_collision(player, meteor_R4)
+            or check_collision(player, meteor_L5)
+            or check_collision(player, meteor_R5)
+            or check_collision(player, meteor_L6)
+            or check_collision(player, meteor_R6)
+            or check_collision(player, meteor_R7)
 
-            #or check_collision(player, witch_L1)
-            #or check_collision(player, witch_R1)
-            #or check_collision(player, witch_L2)
-            #or check_collision(player, witch_R2)
-            #or check_collision(player, witch_L3)
-            #or check_collision(player, witch_R3)
-            #or check_collision(player, witch_L4)
-            #or check_collision(player, witch_R4)
-            #or check_collision(player, witch_L5)
-
-        ):
+            or check_collision(player, witch_L1)
+            or check_collision(player, witch_R1)
+            or check_collision(player, witch_L2)
+            or check_collision(player, witch_R2)
+            or check_collision(player, witch_L3)
+            or check_collision(player, witch_R3)
+            or check_collision(player, witch_L4)
+            or check_collision(player, witch_R4)
+            or check_collision(player, witch_L5)):
             explosion_sound.play()
             menu_state = "game over"
 
